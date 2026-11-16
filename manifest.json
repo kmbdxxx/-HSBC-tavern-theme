@@ -1,0 +1,12 @@
+{
+  "display_name": "测试",
+  "loading_order": 90,
+  "requires": [],
+  "optional": [],
+  "js": "index.js",
+  "css": "style.css",
+  "author": "kmbdxxx",
+  "version": "0.1.0",
+  "description": "HSBC UK 风格的 SillyTavern 第三方前端美化扩展（测试版）。",
+  "homePage": "https://github.com/kmbdxxx/tavern-test"
+}
