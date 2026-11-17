@@ -1,71 +1,46 @@
 # 测试 · HSBC UK Tavern Skin
 
-面向 SillyTavern 的离线第三方前端扩展。项目独立存放在 `hsbc-tavern` 文件夹，可从 GitHub 安装和更新。界面参考项目提供的 HSBC UK 手机端图片；图标、品牌标识和抽屉插画均由内联 SVG 绘制，不加载外部图片或字体。
+为 SillyTavern 提供独立全屏的 HSBC UK 风格前端扩展。插件以本地内联 SVG 和随包附带的银行卡卡面素材绘制界面，不依赖第三方图片服务或远程字体。
 
-## 0.8.0
+## 本版更新 0.9.0
 
-- Bank A/C 卡片使用设备本地日期 `YYMMDD`，不再显示固定账号样式数字；聊天中隐藏酒馆系统欢迎消息残留。
-- Cards 页面改为真实横向银行卡比例，增加可循环切换的称谓、Debit/Premier/Global 卡面，以及完整人设摘要列表。
-- Cards 页面下方直接挂载酒馆原生 Persona Management 面板，保留新增、备份/恢复、导入导出、删除、默认人设、角色/聊天锁定和描述编辑等原生操作；离开页面后还原面板位置。
-- 修正默认页勾选框为 HSBC 红色样式、校正第 3 页垃圾桶方向，并强化所有原生子页面和人设管理面板的高对比 HSBC 表单与卡片样式。
-
-## 0.7.1
-
-- 保留 Font Awesome 原生图标字体，修复 API、扩展与世界书子页中的叉号方框；重设原生抽屉标题和表单为 HSBC 白灰卡片。
-- 底部输入栏只保留 SVG 图标，工具菜单支持第 1 页排序、收藏即时红星反馈和第 3 页垃圾桶移除。
-- Bank A/C 顶卡显示酒馆版本并可关闭；Cards 页面从酒馆上下文和人设列表合并读取所有 persona，支持标准、Prime、Global 和上传卡面。
-- 开屏改为清晰的红白几何 SVG，可在 Extensions 中上传或重置自定义开屏图。
-
-## 0.6.1
-
-- 在 index.js 内嵌 HSBC CSS，并在 head 末尾创建 #hsbc-master-style；head 观察器仅在该样式不为最后元素时移动它。
-- 壳层和开屏先完整挂载，再启用 `body.hsbc-ui-mounted`；库抽屉、快捷浮层和子页启动时默认隐藏。
-- 启用期间隐藏酒馆背景和弹窗遮罩；独立项目与已安装扩展目录使用同一份文件。
-
-## 0.6.0
-
-- 将扩展主样式复制到 document.head 最后一个 style 节点，并持续维持其最后位置；继续停用酒馆自定义 CSS，原生布局整体移出视口。
-- 新增按设备本地时间显示的 HSBC 风格开屏插画、问候、登录按钮与 FSCS 锁形标识；Library 的 Log off 会重新显示开屏。
-- 重绘 Library 多色 SVG 插画，并把银行、安全和帮助项目改为居中三列图标网格。
-- 收紧窄屏顶部导航和快捷菜单分页行，避免汉堡菜单误触及默认页选项溢出。
-
-## 0.5.0
-
-- 改为独立全屏应用根节点 `#hsbc-uk-app`，不再把酒馆主布局节点当作美化容器；启用时停用 `#custom-style`，使旧主题留在底层。
-- 将原生 `#chat` 消息流挂入 HSBC 聊天视口；底部使用独立输入框，并通过原生 textarea 的 `input` 事件和原生发送按钮桥接消息。
-- 新增全屏覆盖子页。Presets、API Connections、Extensions、角色列表、World Info、背景、高级格式化和用户设置使用酒馆现有抽屉内容，打开时临时挂载，返回聊天时还原位置和状态。
-- 重做 52px 顶部导航、HSBC 聊天输入栏、三页工具浮层、persona Cards 页面和 88% 宽右侧 Library 抽屉。
-- 支持快捷项复制、移除和排序，卡片轮播开关以及每个 persona 独立上传卡面图。
+- Home 与导航栏分隔线改为居中的 22px 细线；首页欢迎卡只保留 HSBC Bank A/C 信息，日期按本地时钟生成，并可展开最近聊天记录。
+- 最近聊天通过 SillyTavern 聊天搜索接口读取当前角色或群组历史，点选后交由酒馆原生聊天加载方法切换。
+- Cards 页面支持全部 User Personas、称谓选择、Swipe/List 模式、四组遮罩卡号点、自定义上传和本地 HSBC 卡面图库；图库卡面采用银行卡比例、圆角裁切，图片原始黑色角不会显示。
+- 新增 11 张用户提供的 HSBC 卡面到 `assets/cards/`，可从卡面选择器的 HSBC card gallery 中选用；所有卡面资源离线随插件分发。
+- Character 列表增加收藏过滤、搜索、原生排序/导入/创建入口和整洁的角色行；角色点击仍调用酒馆原生事件。
+- 人设管理、Presets、API、Extensions、World Info、背景、高级格式化和用户设置维持原生控件及存储事件，并统一使用高对比 HSBC 表单和分组卡片样式。
+- 修复关闭子页面时原生抽屉没有收起的问题；编辑人设备注时不再重绘输入区，确保连续输入。
+- Library 的快捷入口、三列功能区、滚动内容和固定底部版本/Log off 均按 HSBC 风格整理。
 
 ## 安装
 
-在 SillyTavern 扩展管理中选择 **Install extension**，填入：
+在 SillyTavern 扩展管理的第三方扩展安装器中输入：
 
 `https://github.com/kmbdxxx/tavern-test`
 
-安装后启用“测试”。更新可在扩展管理器中执行。仓库根目录包含 `manifest.json`、`index.js`、`style.css` 和本说明文件。
+仓库根目录包含扩展所需的 `manifest.json`、`index.js`、`style.css` 和 `assets/cards/` 图片资源。安装后启用“测试”；更新也从第三方扩展管理器执行。
 
-## 按键映射
+## 功能映射
 
-| HSBC UI | SillyTavern 原生功能 |
+| HSBC 页面 | SillyTavern 原生功能 |
 | --- | --- |
-| Home | AI response configuration / Presets |
-| Pay | API Connections 和模型设置 |
-| Cards | persona 选择与自定义卡面 |
+| Home | Presets / 生成参数 |
+| Pay | API Connections / 模型连接 |
+| Cards | User Personas |
 | Save & Invest | Extensions |
-| Products and services | Character management |
+| Products and services | Characters |
 | Money trends | World Info |
-| Insurance | Backgrounds |
+| Insurance | Backgrounds / Theme |
 | Security and fraud | Advanced Formatting |
 | Library 用户图标 | User Settings |
 
-本扩展通过触发酒馆现有控件打开面板；不会连接 API、发送请求或修改酒馆持久数据。返回聊天时，临时挂载的原生面板会归还到原容器。
+插件通过原生按钮、面板和事件映射功能，不创建替代的角色、聊天或人设数据存储。人设名称和描述由酒馆原生界面保存；称谓、卡面图库选择、上传图和视图偏好保存在当前浏览器本地。
 
-## 本地偏好
+## 本地开发
 
-快捷页默认项、快捷工具顺序、收藏项、Cards 轮播状态和用户上传的卡面保存在当前浏览器的 `localStorage`（`hsbc-tavern.preferences.v3`）。卡面图会缩放并压缩后保存在本机浏览器。
+项目目录可独立用于 GitHub。修改后将项目完整文件同步到酒馆扩展安装目录，或通过扩展管理器从仓库重新安装。外部图片素材位于 `assets/cards/`，运行时从扩展相对路径加载。
 
 ## 停用
 
-在 SillyTavern 扩展管理中关闭本扩展并重新载入页面，即可回到酒馆原生界面。页面卸载时会还原聊天节点、已挂载的面板和原 `#custom-style` 启用状态。
-
+在第三方扩展管理器中关闭扩展并重新加载页面即可还原酒馆原生界面和自定义 CSS 状态。

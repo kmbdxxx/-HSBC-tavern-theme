@@ -1,17 +1,12 @@
 {
-    "display_name":  "测试",
-    "loading_order":  90,
-    "requires":  [
-
-                 ],
-    "optional":  [
-
-                 ],
-    "js":  "index.js",
-    "css":  "style.css",
-    "author":  "kmbdxxx",
-    "version":  "0.8.0",
-    "description":  "HSBC UK inspired standalone SillyTavern interface shell (test edition).",
-    "homePage":  "https://github.com/kmbdxxx/tavern-test"
+  "display_name": "测试",
+  "loading_order": 90,
+  "requires": [],
+  "optional": [],
+  "js": "index.js",
+  "css": "style.css",
+  "author": "kmbdxxx",
+  "version": "0.9.0",
+  "description": "HSBC UK inspired standalone SillyTavern interface shell with local HSBC card artwork.",
+  "homePage": "https://github.com/kmbdxxx/tavern-test"
 }
-
