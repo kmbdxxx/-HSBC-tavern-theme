@@ -6,7 +6,7 @@
   "js": "index.js",
   "css": "style.css",
   "author": "kmbdxxx",
-  "version": "1.0.2",
-  "description": "HSBC UK themed SillyTavern interface with native feature integration, precise recent chat history, and editable account styling.",
+  "version": "1.0.3",
+  "description": "HSBC UK SillyTavern interface with resilient native subpages, prompt editing overlays, and privacy-safe account styling.",
   "homePage": "https://github.com/kmbdxxx/tavern-test"
 }
