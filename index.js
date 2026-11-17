@@ -1,4 +1,3 @@
-index.js
 const STORE_KEY = 'hsbc-tavern.preferences.v2';
 const BASE = { defaultPage: 0, orders: { options: [], extensions: [], custom: [] }, custom: [], cards: {}, carousel: true, cardIndex: 0 };
 let state;
@@ -38,13 +37,13 @@ function nav() {
 function setActiveTab(key) { document.querySelectorAll('.hsbc-nav-home,.hsbc-nav-tab').forEach(b => b.classList.toggle('is-active', (b.dataset.tab || 'home') === key)); }
 function sourceItems(kind) {
   const root = document.querySelector(kind === 'options' ? '#options .options-content' : '#extensionsMenu'); if (!root) return [];
-  const selectors = kind === 'options' ? 'a,button,[role="menuitem"]' : '.extension_container > *, .extension_container button, .extension_container a, .extension_container [role="button"]';
+  const selectors = kind === 'options' ? 'a,button,[role="menuitem"]' : '.extension_container > *, .extension_container .menu_button, .extension_container .interactable, .extension_container button, .extension_container a, .extension_container [role="button"]';
   const candidates = [...root.querySelectorAll(selectors)]; const seen = new Set();
   return candidates.filter(x => {
     if (seen.has(x) || x.closest('hr')) return false; seen.add(x);
-    if (x.classList.contains('displayNone') || x.getAttribute('aria-hidden') === 'true' || x.hidden) return false;
+    if (x.classList.contains('displayNone') || x.getAttribute('aria-hidden') === 'true' || x.hidden || x.style.display === 'none') return false;
     const label = (x.getAttribute('title') || x.getAttribute('aria-label') || x.innerText || x.textContent || '').replace(/\s+/g, ' ').trim();
-    if (!label || x.querySelectorAll('a,button,[role="button"]').length && !x.matches('a,button,[role="button"]')) return false;
+    if (!label || x.querySelectorAll('a,button,[role="button"],.menu_button,.interactable').length && !x.matches('a,button,[role="button"],.menu_button,.interactable')) return false;
     return true;
   }).map((node, index) => {
     const label = (node.getAttribute('title') || node.getAttribute('aria-label') || node.innerText || node.textContent || `Tool ${index + 1}`).replace(/\s+/g, ' ').trim();
