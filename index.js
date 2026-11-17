@@ -174,15 +174,54 @@ function makeLibrary() {
   const host = create('div', 'hsbc-library-host'); host.append(shade, panel); return host;
 }
 
+function makeSplash() {
+  const splash = create('div', 'hsbc-splash', `<div class="hsbc-splash-scene"><svg viewBox="0 0 720 680" role="img" aria-label="A quiet lakeside at sunset"><defs><linearGradient id="hsbc-sky" x2="0" y2="1"><stop stop-color="#f8e8e5"/><stop offset=".55" stop-color="#eab6a8"/><stop offset="1" stop-color="#d5d7dc"/></linearGradient><linearGradient id="hsbc-lake" x2="0" y2="1"><stop stop-color="#c9cbd4"/><stop offset="1" stop-color="#aeb5c0"/></linearGradient></defs><path fill="url(#hsbc-sky)" d="M0 0h720v350H0z"/><path fill="#d78c7d" d="m0 300 115-82 80 37 135-142 114 92 70-51 206 126v104H0z"/><path fill="#8d6970" d="m0 310 115-92 80 37 135-142 114 92 70-51 206 126v38H0z" opacity=".7"/><path fill="url(#hsbc-lake)" d="M0 335h720v345H0z"/><path d="M0 354c108 10 159 16 265 5s181-9 275 0 118 13 180 6M0 410c95 7 164 18 276 9s182-12 276 1 109 12 168 8M0 495c130 11 210 19 329 8s240-9 391 8" fill="none" stroke="#f7f3f3" stroke-opacity=".6" stroke-width="3"/><ellipse cx="490" cy="584" rx="25" ry="78" fill="#bd5b53" opacity=".24"/><circle cx="490" cy="366" r="13" fill="#29292c"/><path fill="#db0011" d="M473 382q17-13 34 0l15 76-13 6-9-43 3 68h-27l2-68-10 43-13-6z"/><path d="m478 486-6 70h12l8-70m12 0 8 70h12l-5-70" fill="#29292c"/></svg></div><div class="hsbc-splash-copy"><span class="hsbc-splash-brand"><i></i><b>HSBC</b></span><p class="hsbc-splash-greeting"></p><h1></h1><p class="hsbc-splash-subtitle">Your conversations, thoughtfully arranged.</p><button class="hsbc-splash-enter" type="button">Continue <span>→</span></button><small>TEST EDITION · SILLYTAVERN</small></div>`);
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
+  const persona = document.querySelector('#your_name')?.textContent?.trim();
+  splash.querySelector('.hsbc-splash-greeting').textContent = greeting;
+  splash.querySelector('h1').textContent = persona && !persona.startsWith('[') ? persona : 'Welcome back';
+  const dismiss = () => { splash.classList.add('is-leaving'); window.setTimeout(() => splash.remove(), 460); };
+  splash.querySelector('.hsbc-splash-enter').addEventListener('click', dismiss);
+  window.setTimeout(dismiss, 2400);
+  return splash;
+}
+
+let skinOrderObserver;
+function enforceSkinOrder() {
+  const moveSkinLast = () => {
+    const skin = [...document.querySelectorAll('link[rel="stylesheet"]')].find((link) => /\/hsbc-tavern\/style\.css(?:\?|$)/.test(link.href));
+    if (skin && document.head.lastElementChild !== skin) document.head.appendChild(skin);
+  };
+  moveSkinLast();
+  if (!skinOrderObserver) {
+    skinOrderObserver = new MutationObserver(moveSkinLast);
+    skinOrderObserver.observe(document.head, { childList: true, subtree: true, characterData: true });
+  }
+}
+
 function mount() {
   if (!document.body || document.querySelector('.hsbc-nav')) return;
   document.body.classList.add('hsbc-tavern');
+  enforceSkinOrder();
+  document.getElementById('preloader')?.remove();
   const nav = makeNavigation(); document.body.prepend(nav);
   const chat = document.querySelector('#chat'); if (chat) { chat.before(makeChatTools()); chat.before(makeCardPanel()); }
   document.body.append(makeLibrary());
-  const textarea = document.querySelector('#send_textarea'); if (textarea) { textarea.placeholder = 'Start chat'; textarea.setAttribute('aria-label', 'Start chat'); }
-  const observer = new MutationObserver(() => { const area = document.querySelector('#send_textarea'); if (area && area.placeholder !== 'Start chat') area.placeholder = 'Start chat'; });
-  observer.observe(document.body, { childList: true, subtree: true });
+  const textarea = document.querySelector('#send_textarea');
+  const applyComposer = () => {
+    const area = document.querySelector('#send_textarea'); if (!area) return;
+    if (area.placeholder !== 'Start chat') area.placeholder = 'Start chat';
+    area.setAttribute('aria-label', 'Start chat');
+  };
+  applyComposer();
+  const observer = new MutationObserver((records) => {
+    if (records.some((record) => record.target?.id === 'custom-style' || record.target?.closest?.('#custom-style'))) enforceSkinOrder();
+    applyComposer();
+  });
+  observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['placeholder', 'style', 'class'] });
+  observer.observe(document.head, { childList: true, subtree: true, characterData: true });
+  document.body.append(makeSplash());
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLibrary(); });
 }
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mount, { once: true }); else mount();
