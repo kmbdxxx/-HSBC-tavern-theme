@@ -1,227 +1,204 @@
-const KEY = 'hsbc-tavern.preferences.v1';
-const DEFAULTS = { defaultPage: 0, activePage: 0, cardCarousel: true, cardImages: {}, shortcuts: [] };
-let prefs;
-try { prefs = { ...DEFAULTS, ...JSON.parse(localStorage.getItem(KEY) || '{}') }; } catch { prefs = { ...DEFAULTS }; }
-if (prefs.defaultPage >= 0 && prefs.defaultPage < 3) prefs.activePage = prefs.defaultPage;
-const save = () => localStorage.setItem(KEY, JSON.stringify(prefs));
-const svg = (body, cls = '') => `<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${body}</svg>`;
-const icons = {
-  home: svg('<path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/><path d="M3 21h18"/>'),
-  pay: svg('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/>'),
-  cards: svg('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h3"/>'),
-  save: svg('<path d="M4 5h16v15H4zM8 5v5h8V5M8 20v-6h8v6"/>'),
-  menu: svg('<path d="M4 6h16M4 12h16M4 18h16"/>'),
-  back: svg('<path d="m15 18-6-6 6-6M9 12h12"/>'),
-  close: svg('<path d="m6 6 12 12M18 6 6 18"/>'),
-  person: svg('<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'),
-  bell: svg('<path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/>'),
-  arrow: svg('<path d="M5 12h14M13 6l6 6-6 6"/>'),
-  sliders: svg('<path d="M4 6h16M4 12h16M4 18h16M8 4v4M15 10v4M10 16v4"/>'),
-  world: svg('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/>'),
-  umbrella: svg('<path d="M3 12a9 9 0 0 1 18 0zM12 12v7a2 2 0 0 0 4 0"/>'),
-  shield: svg('<path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11z"/><path d="m9 12 2 2 4-4"/>'),
-  chart: svg('<path d="M4 19h16M6 16l4-5 3 2 5-7"/><circle cx="18" cy="6" r="2"/>'),
-  wallet: svg('<path d="M4 6h15a2 2 0 0 1 2 2v11H5a2 2 0 0 1-2-2V6a3 3 0 0 1 3-3h12"/><path d="M16 12h5v4h-5a2 2 0 0 1 0-4z"/>'),
-  chat: svg('<path d="M4 5h16v12H9l-5 4zM8 9h8M8 13h5"/>'),
-  spark: svg('<path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/>'),
+index.js
+const STORE_KEY = 'hsbc-tavern.preferences.v2';
+const BASE = { defaultPage: 0, orders: { options: [], extensions: [], custom: [] }, custom: [], cards: {}, carousel: true, cardIndex: 0 };
+let state;
+try { state = { ...BASE, ...JSON.parse(localStorage.getItem(STORE_KEY) || '{}') }; } catch { state = structuredClone(BASE); }
+state.orders = { ...BASE.orders, ...(state.orders || {}) };
+state.cards ||= {}; state.custom ||= [];
+const persist = () => localStorage.setItem(STORE_KEY, JSON.stringify(state));
+const svg = (content, cls = '') => `<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round">${content}</svg>`;
+const I = {
+  home: svg('<path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/>'),
+  menu: svg('<path d="M3 6h18M3 12h18M3 18h18"/>'), close: svg('<path d="m6 6 12 12M18 6 6 18"/>'),
+  person: svg('<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'), bell: svg('<path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/>'),
+  chat: svg('<path d="M4 4h16v13H9l-5 4zM8 8h8M8 12h6"/>'), left: svg('<path d="m15 18-6-6 6-6"/>'), right: svg('<path d="m9 18 6-6-6-6"/>'),
+  arrow: svg('<path d="M4 12h15m-6-6 6 6-6 6"/>'), wallet: svg('<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 8h15m-4 6h5"/><circle cx="16" cy="14" r=".6"/>'),
+  chart: svg('<path d="M12 3a9 9 0 1 0 9 9h-9z"/><path d="M14 3v7h7"/><circle cx="8" cy="15" r="1"/>'), umbrella: svg('<path d="M3 12a9 9 0 0 1 18 0zM12 12v7a2 2 0 0 0 4 0"/>'),
+  shield: svg('<path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11z"/><path d="m9 12 2 2 4-4"/>'), card: svg('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/>'),
 };
-const create = (tag, cls, html = '') => { const el = document.createElement(tag); if (cls) el.className = cls; el.innerHTML = html; return el; };
-const clickFirst = (selectors) => { for (const selector of selectors) { const el = document.querySelector(selector); if (el) { el.click(); return true; } } return false; };
+const el = (tag, cls, html = '') => { const n = document.createElement(tag); if (cls) n.className = cls; n.innerHTML = html; return n; };
+const click = (...selectors) => { for (const s of selectors) { const n = document.querySelector(s); if (n) { n.click(); return true; } } return false; };
 const actions = {
-  home: () => clickFirst(['#leftNavDrawerIcon']),
-  // Never click a provider's Connect button here: that can start a live request.
-  pay: () => {
-    if (clickFirst(['#api-connections-button', '#api_connection_button', '#api-settings-button .drawer-toggle', '[data-target="api-settings-button"]', '[data-target="api_connection"]'])) return true;
-    const opener = [...document.querySelectorAll('button, .menu_button, .drawer-toggle, .drawer-icon')].find((el) => {
-      const label = `${el.getAttribute('title') || ''} ${el.getAttribute('aria-label') || ''} ${el.textContent || ''}`.trim();
-      return /^(API connections?|API settings|Connections)$/i.test(label) && !/connect$/i.test(label);
-    });
-    opener?.click(); return Boolean(opener);
-  },
-  cards: () => clickFirst(['#persona-management-button .drawer-toggle', '#persona-management-button .drawer-header']),
-  save: () => clickFirst(['#extensions-settings-button .drawer-toggle', '#extensions-settings-button .drawer-header']),
-  characters: () => clickFirst(['#rm_button_characters']), world: () => clickFirst(['#world_info_button', '#world-info-button', '#world_info']),
-  backgrounds: () => clickFirst(['#backgrounds-drawer-toggle']), advanced: () => clickFirst(['#advanced-formatting-button .drawer-toggle', '#advanced_formatting_button']),
-  settings: () => clickFirst(['#user-settings-button .drawer-toggle', '#user-settings-button .drawer-header']),
-  options: () => clickFirst(['#options_button']),
+  home: () => click('#leftNavDrawerIcon'), pay: () => click('#API-status-top'),
+  save: () => click('#extensions-settings-button .drawer-toggle, #extensions-settings-button .drawer-header'),
+  cardsManage: () => click('#persona-management-button .drawer-toggle'),
+  characters: () => click('#rm_button_characters', '#rightNavDrawerIcon'),
+  world: () => click('#WI-SP-button .drawer-toggle', '#WIDrawerIcon'),
+  backgrounds: () => click('#backgrounds-drawer-toggle'),
+  advanced: () => click('#advanced-formatting-button .drawer-toggle, #advanced-formatting-button .drawer-header'),
+  settings: () => click('#user-settings-button .drawer-toggle, #user-settings-button .drawer-header'),
 };
-
-function makeButton(label, icon, handler, cls = '') {
-  const b = create('button', `hsbc-action ${cls}`, `${icon}<span>${label}</span>`); b.type = 'button'; b.addEventListener('click', handler); return b;
+function button(label, icon, fn, cls = '') { const b = el('button', cls, `${icon || ''}<span class="hsbc-label"></span>`); b.type = 'button'; b.querySelector('.hsbc-label').textContent = label; if (fn) b.addEventListener('click', fn); return b; }
+function nav() {
+  const n = el('nav', 'hsbc-nav'); n.setAttribute('aria-label', 'Main navigation');
+  const brand = button('Home', I.home, () => { setActiveTab('home'); showChat(); actions.home(); }, 'hsbc-nav-home'); brand.setAttribute('aria-label', 'Home · Presets'); brand.classList.add('is-active'); n.append(brand);
+  [['Pay', 'pay'], ['Cards', 'cards'], ['Save & Invest', 'save']].forEach(([label, key]) => { const b = button(label, '', () => { setActiveTab(key); key === 'cards' ? showCards() : (showChat(), actions[key]()); }, 'hsbc-nav-tab'); b.dataset.tab = key; n.append(b); });
+  const lib = button('Library', I.menu, openLibrary, 'hsbc-nav-library'); lib.setAttribute('aria-label', 'Open Library'); n.append(lib); return n;
 }
-function makeNavigation() {
-  const bar = create('nav', 'hsbc-nav');
-  bar.setAttribute('aria-label', 'Main navigation');
-  const home = create('button', 'hsbc-nav-brand', `${icons.home}<i></i>`);
-  home.type = 'button'; home.setAttribute('aria-label', 'Home · Presets'); home.title = 'Home · Presets'; home.addEventListener('click', actions.home); bar.appendChild(home);
-  [['Pay', 'pay'], ['Cards', 'cards'], ['Save & Invest', 'save']].forEach(([label, key]) => {
-    bar.appendChild(makeButton(label, '', () => key === 'cards' ? openCards() : actions[key]()));
+function setActiveTab(key) { document.querySelectorAll('.hsbc-nav-home,.hsbc-nav-tab').forEach(b => b.classList.toggle('is-active', (b.dataset.tab || 'home') === key)); }
+function sourceItems(kind) {
+  const root = document.querySelector(kind === 'options' ? '#options .options-content' : '#extensionsMenu'); if (!root) return [];
+  const selectors = kind === 'options' ? 'a,button,[role="menuitem"]' : '.extension_container > *, .extension_container button, .extension_container a, .extension_container [role="button"]';
+  const candidates = [...root.querySelectorAll(selectors)]; const seen = new Set();
+  return candidates.filter(x => {
+    if (seen.has(x) || x.closest('hr')) return false; seen.add(x);
+    if (x.classList.contains('displayNone') || x.getAttribute('aria-hidden') === 'true' || x.hidden) return false;
+    const label = (x.getAttribute('title') || x.getAttribute('aria-label') || x.innerText || x.textContent || '').replace(/\s+/g, ' ').trim();
+    if (!label || x.querySelectorAll('a,button,[role="button"]').length && !x.matches('a,button,[role="button"]')) return false;
+    return true;
+  }).map((node, index) => {
+    const label = (node.getAttribute('title') || node.getAttribute('aria-label') || node.innerText || node.textContent || `Tool ${index + 1}`).replace(/\s+/g, ' ').trim();
+    const key = node.id || node.dataset.extensionId || node.dataset.id || `${kind}-${label.toLowerCase()}`;
+    return { key, label, node, kind };
   });
-  const library = create('button', 'hsbc-nav-menu', icons.menu); library.type = 'button'; library.setAttribute('aria-label', 'Open Library'); library.addEventListener('click', openLibrary); bar.appendChild(library);
-  return bar;
 }
-
-function makeChatTools() {
-  const wrap = create('section', 'hsbc-chat-tools'); wrap.setAttribute('aria-label', 'Chat shortcuts');
-  const row = create('div', 'hsbc-page-switch');
-  const pages = [
-    { title: 'Chat', icon: icons.chat, buttons: [['Presets', actions.home], ['API connection', actions.pay], ['Extensions', actions.save]] },
-    { title: 'Tools', icon: icons.spark, buttons: [['Characters', actions.characters], ['World Info', actions.world], ['Backgrounds', actions.backgrounds], ['Advanced formatting', actions.advanced]] },
-    { title: 'My shortcuts', icon: icons.sliders, buttons: [] },
-  ];
-  const pageContent = create('div', 'hsbc-shortcut-content');
-  const renderPage = () => {
-    const page = pages[prefs.activePage] || pages[0]; pageContent.replaceChildren();
-    for (const [label, fn] of page.buttons) pageContent.appendChild(makeButton(label, icons.arrow, fn));
-    if (prefs.activePage === 2) {
-      const add = makeButton('＋ Add shortcut', icons.spark, () => {
-        const label = window.prompt('Shortcut name'); if (!label) return;
-        const choices = [['Presets', actions.home], ['API connection', actions.pay], ['Characters', actions.characters], ['World Info', actions.world], ['Backgrounds', actions.backgrounds], ['Extensions', actions.save], ['User settings', actions.settings]];
-        const choice = choices.find(([name]) => name.toLowerCase() === label.toLowerCase());
-        if (choice) { prefs.shortcuts.push(choice[0]); save(); renderPage(); }
-      }); pageContent.appendChild(add);
-      prefs.shortcuts.forEach((label, index) => {
-        const choice = { Presets: actions.home, 'API connection': actions.pay, Characters: actions.characters, 'World Info': actions.world, Backgrounds: actions.backgrounds, Extensions: actions.save, 'User settings': actions.settings }[label];
-        const b = makeButton(`${label}  ×`, icons.arrow, () => choice?.());
-        b.draggable = true; b.title = '拖动排序；右键移除此快捷入口'; b.addEventListener('contextmenu', (e) => { e.preventDefault(); prefs.shortcuts.splice(index, 1); save(); renderPage(); });
-        b.addEventListener('dragstart', (e) => e.dataTransfer.setData('text/plain', String(index)));
-        b.addEventListener('dragover', (e) => e.preventDefault());
-        b.addEventListener('drop', (e) => { e.preventDefault(); const from = Number(e.dataTransfer.getData('text/plain')); const [moved] = prefs.shortcuts.splice(from, 1); prefs.shortcuts.splice(index, 0, moved); save(); renderPage(); });
-        pageContent.appendChild(b);
-      });
-    }
-    wrap.dataset.page = String(prefs.activePage);
-    const defaultInput = wrap.querySelector('.hsbc-default-page input');
-    if (defaultInput) defaultInput.checked = prefs.defaultPage === prefs.activePage;
-    row.querySelectorAll('[data-page]').forEach((button) => { button.setAttribute('aria-current', String(Number(button.dataset.page) === prefs.activePage)); });
-  };
-  [['‹', -1], ['1', 0], ['2', 1], ['3', 2], ['›', 1]].forEach(([label, delta]) => {
-    const b = create('button', 'hsbc-page-button', label); b.type = 'button';
-    if (label === '‹' || label === '›') b.setAttribute('aria-label', label === '‹' ? 'Previous shortcut page' : 'Next shortcut page');
-    else { b.dataset.page = String(delta); b.title = pages[delta].title; }
-    b.addEventListener('click', () => { prefs.activePage = label === '‹' || label === '›' ? (prefs.activePage + delta + 3) % 3 : delta; save(); renderPage(); }); row.appendChild(b);
+function ordered(list, kind) { const order = state.orders[kind] || []; return [...list].sort((a, b) => { const ai = order.indexOf(a.key), bi = order.indexOf(b.key); return (ai < 0 ? 99999 : ai) - (bi < 0 ? 99999 : bi); }); }
+function customResolved() {
+  const all = [...sourceItems('options'), ...sourceItems('extensions')];
+  return (state.custom || []).map(c => { const item = all.find(x => x.kind === c.kind && x.key === c.key); return item ? { ...item, customKey: `${item.kind}:${item.key}` } : null; }).filter(Boolean);
+}
+let menuPage = 0;
+function renderMenu() {
+  const box = document.querySelector('.hsbc-tools'); if (!box) return;
+  const list = box.querySelector('.hsbc-tools-list'); list.replaceChildren();
+  const items = menuPage === 0 ? ordered(sourceItems('options'), 'options') : menuPage === 1 ? ordered(sourceItems('extensions'), 'extensions') : ordered(customResolved(), 'custom');
+  if (!items.length) { const empty = el('p', 'hsbc-empty', menuPage === 2 ? 'Add frequently used items with ☆ from pages 1 or 2.' : 'No available items'); list.append(empty); }
+  items.forEach(item => {
+    const row = el('div', 'hsbc-tool-row'); row.dataset.key = item.key; row.dataset.kind = item.kind;
+    const open = button(item.label, '', () => { item.node.click(); closeTools(); }, 'hsbc-tool-open');
+    const copy = button(menuPage === 2 ? 'Remove' : '☆', '', () => {
+      if (menuPage === 2) state.custom = state.custom.filter(c => !(c.kind === item.kind && c.key === item.key));
+      else if (!state.custom.some(c => c.kind === item.kind && c.key === item.key)) state.custom.push({ kind: item.kind, key: item.key });
+      persist(); renderMenu();
+    }, 'hsbc-tool-copy'); copy.setAttribute('aria-label', menuPage === 2 ? 'Remove shortcut' : 'Copy to shortcuts');
+    row.append(open, copy);
+    if (menuPage > 0) { const handle = el('button', 'hsbc-drag-handle', '☰'); handle.type = 'button'; handle.title = 'Hold and drag to reorder'; handle.setAttribute('aria-label', 'Drag to reorder'); row.append(handle); attachReorder(handle, row, menuPage === 1 ? 'extensions' : 'custom'); }
+    list.append(row);
   });
-  const defaultLabel = create('label', 'hsbc-default-page', `<input type="checkbox"><span>设为默认页</span>`);
-  defaultLabel.querySelector('input').addEventListener('change', (e) => { prefs.defaultPage = e.target.checked ? prefs.activePage : -1; save(); });
-  wrap.append(row, defaultLabel, pageContent); renderPage(); return wrap;
+  box.querySelectorAll('[data-page]').forEach(b => b.setAttribute('aria-current', String(Number(b.dataset.page) === menuPage)));
+  box.querySelector('.hsbc-default-check').checked = state.defaultPage === menuPage;
 }
-
-function illustration(kind) {
-  const shapes = {
-    wallet: '<path d="M17 8V5H5v14h14v-3"/><path d="M4 8h14a2 2 0 0 1 2 2v6H9a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h11"/><circle cx="10" cy="13" r=".7"/>',
-    chart: '<path d="M12 3a9 9 0 1 0 9 9h-9z"/><path d="M14 3v7h7a9 9 0 0 0-7-7z"/><circle cx="8" cy="15" r="1"/>',
-    umbrella: '<path d="M3 12a9 9 0 0 1 18 0z"/><path d="M12 12v7a2 2 0 0 0 4 0"/>',
-    shield: '<path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11z"/><path d="m9 12 2 2 4-4"/>',
-  };
-  return `<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="#f3f4f6"/><g fill="none" stroke="#db0011" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${shapes[kind]}</g><path d="M5 34h14v7H5z" fill="#db0011" opacity=".9"/></svg>`;
+function attachReorder(handle, row, orderKey) {
+  row.draggable = false; handle.draggable = true;
+  handle.addEventListener('dragstart', e => { e.dataTransfer.setData('text/plain', row.dataset.key); row.classList.add('is-dragging'); });
+  handle.addEventListener('dragend', () => row.classList.remove('is-dragging'));
+  row.addEventListener('dragover', e => { e.preventDefault(); const moving = document.querySelector('.hsbc-tool-row.is-dragging'); if (moving && moving !== row) { const r = row.getBoundingClientRect(); row.parentElement.insertBefore(moving, e.clientY < r.top + r.height / 2 ? row : row.nextSibling); } });
+  row.addEventListener('drop', e => { e.preventDefault(); saveOrder(row.closest('.hsbc-tools-list'), orderKey); });
+  let pointer = null;
+  handle.addEventListener('pointerdown', e => { if (e.pointerType === 'mouse') return; pointer = e.pointerId; handle.setPointerCapture(pointer); row.classList.add('is-dragging'); e.preventDefault(); });
+  handle.addEventListener('pointermove', e => { if (pointer !== e.pointerId) return; const target = document.elementFromPoint(e.clientX, e.clientY)?.closest('.hsbc-tool-row'); if (target && target !== row && target.parentElement === row.parentElement) { const r = target.getBoundingClientRect(); row.parentElement.insertBefore(row, e.clientY < r.top + r.height / 2 ? target : target.nextSibling); } });
+  const finish = e => { if (pointer !== e.pointerId) return; pointer = null; row.classList.remove('is-dragging'); saveOrder(row.closest('.hsbc-tools-list'), orderKey); };
+  handle.addEventListener('pointerup', finish); handle.addEventListener('pointercancel', finish);
 }
-function openLibrary() { const drawer = document.querySelector('.hsbc-library'); drawer?.classList.add('is-open'); document.body.classList.add('hsbc-library-open'); drawer?.querySelector('.hsbc-library-close')?.focus(); }
-function closeLibrary() { document.querySelector('.hsbc-library')?.classList.remove('is-open'); document.body.classList.remove('hsbc-library-open'); }
-function openCards() {
-  actions.cards();
-  const panel = document.querySelector('.hsbc-card-panel');
-  panel?.classList.add('is-visible');
-  window.setTimeout(renderPersonaCards, 180);
+function saveOrder(list, key) { state.orders[key] = [...list.querySelectorAll('.hsbc-tool-row')].map(r => r.dataset.key); persist(); }
+function makeTools() {
+  const panel = el('section', 'hsbc-tools'); panel.setAttribute('aria-label', 'Chat tools');
+  const head = el('header', 'hsbc-tools-head'); const prev = button('Previous', I.left, () => { menuPage = (menuPage + 2) % 3; renderMenu(); }, 'hsbc-tools-arrow'); const next = button('Next', I.right, () => { menuPage = (menuPage + 1) % 3; renderMenu(); }, 'hsbc-tools-arrow');
+  const pages = el('div', 'hsbc-tools-pages', [0, 1, 2].map(i => `<button type="button" data-page="${i}" aria-label="Page ${i + 1}">${i + 1}</button>`).join(''));
+  pages.querySelectorAll('[data-page]').forEach(b => b.addEventListener('click', () => { menuPage = Number(b.dataset.page); renderMenu(); }));
+  const def = el('label', 'hsbc-tools-default', '<input class="hsbc-default-check" type="checkbox"><span>Set as default page</span>');
+  def.querySelector('input').addEventListener('change', e => { state.defaultPage = e.target.checked ? menuPage : -1; persist(); });
+  head.append(prev, pages, next, def); panel.append(head, el('div', 'hsbc-tools-list'));
+  const trigger = button('Chat tools', I.chat, () => toggleTools(), 'hsbc-tools-trigger'); trigger.setAttribute('aria-label', 'Open chat tools');
+  return { panel, trigger };
 }
-function renderPersonaCards() {
-  const panel = document.querySelector('.hsbc-card-panel'); if (!panel?.classList.contains('is-visible')) return;
-  const rail = panel.querySelector('.hsbc-card-rail');
-  const personas = [...document.querySelectorAll('#user_avatar_block .avatar-container[data-avatar-id]')];
-  if (!personas.length) { rail.innerHTML = '<div class="hsbc-card-empty">打开 Cards 后，此处会展示酒馆已有的 User 面具。</div>'; return; }
-  rail.replaceChildren();
-  const carousel = prefs.cardCarousel;
-  personas.forEach((persona, index) => {
-    if (carousel && index !== (Number(panel.dataset.index) || 0) % personas.length) return;
-    const id = persona.dataset.avatarId;
-    const name = persona.querySelector('.ch_name')?.textContent?.trim() || id;
-    const image = prefs.cardImages[id] || persona.querySelector('img')?.src || '';
-    const card = create('button', `hsbc-persona-card ${carousel ? 'hsbc-card-landscape' : 'hsbc-card-row'}`, `<img alt=""><span class="hsbc-card-type">${carousel ? 'HSBC DEBIT' : 'USER PERSONA'}</span><strong></strong><small></small>`);
-    card.querySelector('img').src = image;
-    card.type = 'button'; card.querySelector('strong').textContent = name; card.querySelector('small').textContent = `User persona · ${id}`;
-    card.addEventListener('click', () => persona.click()); rail.appendChild(card);
+function openTools() { const p = document.querySelector('.hsbc-tools'); if (!p) return; menuPage = state.defaultPage >= 0 && state.defaultPage < 3 ? state.defaultPage : 0; renderMenu(); p.classList.add('is-open'); }
+function closeTools() { document.querySelector('.hsbc-tools')?.classList.remove('is-open'); }
+function toggleTools() { document.querySelector('.hsbc-tools')?.classList.contains('is-open') ? closeTools() : openTools(); }
+function messageDecor() {
+  const chat = document.querySelector('#chat'); if (!chat) return;
+  if (!chat.querySelector('.hsbc-today')) { const today = el('div', 'hsbc-today', 'Today'); chat.prepend(today); }
+  chat.querySelectorAll('.mes').forEach(message => {
+    if (message.classList.contains('system') || message.querySelector('.hsbc-now')) return;
+    if (!message.classList.contains('user')) { const avatar = message.querySelector('.mesAvatarWrapper, .mesAvatar'); if (avatar && !avatar.querySelector('.hsbc-hex')) avatar.insertAdjacentHTML('afterbegin', '<span class="hsbc-hex" aria-hidden="true"><svg viewBox="0 0 24 24"><path fill="#db0011" d="m12 1 10 5.7v10.6L12 23 2 17.3V6.7z"/><path fill="#fff" d="m12 5 6 3.4v7.2L12 19l-6-3.4V8.4z"/></svg></span>'); }
+    const body = message.querySelector('.mes_block, .mes_text'); if (body && !body.querySelector(':scope > .hsbc-now')) body.append(el('small', 'hsbc-now', 'Now'));
   });
-  const input = panel.querySelector('input[type=file]');
-  input.onchange = () => {
-    const file = input.files?.[0]; const id = personas[Number(panel.dataset.index) || 0]?.dataset.avatarId;
-    if (!file || !id) return;
-    const reader = new FileReader(); reader.onload = () => { prefs.cardImages[id] = reader.result; save(); renderPersonaCards(); }; reader.readAsDataURL(file);
-    input.value = '';
-  };
 }
-function makeCardPanel() {
-  const panel = create('section', 'hsbc-card-panel'); panel.dataset.index = '0';
-  panel.innerHTML = `<div class="hsbc-card-controls"><strong>Cards · User personas</strong><label><input class="hsbc-card-toggle" type="checkbox" ${prefs.cardCarousel ? 'checked' : ''}><span>卡片滑动</span></label><button class="hsbc-card-prev" type="button" aria-label="Previous persona">‹</button><button class="hsbc-card-next" type="button" aria-label="Next persona">›</button><label class="hsbc-card-upload">上传卡面<input type="file" accept="image/*" hidden></label></div><div class="hsbc-card-rail"></div>`;
-  panel.querySelector('.hsbc-card-toggle').addEventListener('change', (e) => { prefs.cardCarousel = e.target.checked; save(); renderPersonaCards(); });
-  const cycle = (step) => { const count = document.querySelectorAll('#user_avatar_block .avatar-container[data-avatar-id]').length || 1; panel.dataset.index = String((Number(panel.dataset.index) + step + count) % count); renderPersonaCards(); };
-  panel.querySelector('.hsbc-card-prev').addEventListener('click', () => cycle(-1)); panel.querySelector('.hsbc-card-next').addEventListener('click', () => cycle(1));
+function showChat() { document.body.classList.remove('hsbc-cards-open'); document.querySelector('.hsbc-nav-tab[data-tab="cards"]')?.classList.remove('is-active'); }
+function showCards() { closeTools(); closeLibrary(); document.body.classList.add('hsbc-cards-open'); document.querySelectorAll('.hsbc-nav-tab').forEach(b => b.classList.toggle('is-active', b.dataset.tab === 'cards')); paintCards(); }
+function personas() { return [...document.querySelectorAll('#user_avatar_block .avatar-container[data-avatar-id]')]; }
+function cardArtwork(index, name) {
+  const key = /premier|prime/i.test(name) ? 'premier' : /global|money/i.test(name) ? 'global' : ['debit', 'premier', 'global'][index % 3];
+  if (key === 'premier') return 'linear-gradient(135deg,#252a2e,#41464b 55%,#17191b)';
+  if (key === 'global') return 'linear-gradient(135deg,#173b72,#1f67a4 58%,#bc9a48)';
+  return 'linear-gradient(135deg,#d9dde1,#f6f7f8 48%,#c5cbd0)';
+}
+function paintCards() {
+  const rail = document.querySelector('.hsbc-card-list'); if (!rail) return;
+  const people = personas(); const carousel = state.carousel;
+  rail.classList.toggle('is-list', !carousel); rail.replaceChildren();
+  if (!people.length) { rail.append(el('p', 'hsbc-card-empty', 'No user personas found.')); return; }
+  state.cardIndex = ((state.cardIndex % people.length) + people.length) % people.length;
+  people.forEach((persona, index) => {
+    if (carousel && index !== state.cardIndex) return;
+    const id = persona.dataset.avatarId; const name = persona.querySelector('.ch_name')?.textContent?.trim() || id;
+    const card = el('article', `hsbc-persona-card ${carousel ? 'is-carousel' : 'is-row'}`); card.style.setProperty('--card-art', state.cards[id] || cardArtwork(index, name));
+    card.innerHTML = `<div class="hsbc-card-brand">HSBC <span>${/premier|prime/i.test(name) ? 'PREMIER' : /global|money/i.test(name) ? 'GLOBAL MONEY' : 'DEBIT'}</span></div><div class="hsbc-card-center"><span class="hsbc-card-mark">◆</span><strong></strong><small>USER PERSONA · ${safeText(id)}</small></div><div class="hsbc-card-foot"><span>•••• &nbsp; •••• &nbsp; ••••</span><span>VISA</span></div>`;
+    card.querySelector('.hsbc-card-center strong').textContent = name;
+    card.addEventListener('click', e => { if (e.target.closest('.hsbc-card-upload-button')) return; persona.click(); document.querySelectorAll('.hsbc-persona-card').forEach(x => x.classList.remove('is-selected')); card.classList.add('is-selected'); });
+    const file = document.createElement('input'); file.type = 'file'; file.accept = 'image/*'; file.className = 'hsbc-card-file'; file.addEventListener('change', () => {
+      const f = file.files?.[0]; if (!f) return; const reader = new FileReader();
+      reader.onload = () => { const image = new Image(); image.onload = () => { const scale = Math.min(1, 1600 / image.width, 1000 / image.height); const canvas = document.createElement('canvas'); canvas.width = Math.max(1, Math.round(image.width * scale)); canvas.height = Math.max(1, Math.round(image.height * scale)); canvas.getContext('2d').drawImage(image, 0, 0, canvas.width, canvas.height); state.cards[id] = `url("${canvas.toDataURL('image/jpeg', .84)}") center / cover`; try { persist(); paintCards(); } catch { window.alert('This card image is too large for browser storage. Try a smaller image.'); } }; image.src = reader.result; };
+      reader.readAsDataURL(f);
+    });
+    const upload = button('Upload card art', '', () => file.click(), 'hsbc-card-upload-button'); card.append(upload, file); rail.append(card);
+  });
+  const dots = document.querySelector('.hsbc-card-dots'); dots?.replaceChildren(...people.map((_, i) => { const d = el('button', i === state.cardIndex ? 'is-active' : '', ''); d.type = 'button'; d.setAttribute('aria-label', `Persona ${i + 1}`); d.addEventListener('click', () => { state.cardIndex = i; persist(); paintCards(); }); return d; }));
+}
+function safeText(s) { return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]); }
+function makeCards() {
+  const panel = el('main', 'hsbc-cards-screen'); panel.innerHTML = `<header class="hsbc-cards-head"><div><small>YOUR PERSONAS</small><h1>Cards</h1></div><button class="hsbc-card-manage" type="button">Manage personas ${I.arrow}</button></header><div class="hsbc-card-carousel-controls"><button class="hsbc-card-prev" aria-label="Previous">${I.left}</button><div class="hsbc-card-dots"></div><button class="hsbc-card-next" aria-label="Next">${I.right}</button></div><div class="hsbc-card-list"></div><label class="hsbc-carousel-switch"><input type="checkbox" ${state.carousel ? 'checked' : ''}><span class="hsbc-switch-track"><i></i></span><span>Swipe between persona cards</span></label>`;
+  panel.querySelector('.hsbc-card-manage').addEventListener('click', actions.cardsManage);
+  panel.querySelector('.hsbc-card-prev').addEventListener('click', () => { state.cardIndex--; persist(); paintCards(); }); panel.querySelector('.hsbc-card-next').addEventListener('click', () => { state.cardIndex++; persist(); paintCards(); });
+  panel.querySelector('input').addEventListener('change', e => { state.carousel = e.target.checked; persist(); paintCards(); });
+  let x = 0; panel.addEventListener('touchstart', e => { x = e.changedTouches[0].clientX; }, { passive: true }); panel.addEventListener('touchend', e => { const delta = e.changedTouches[0].clientX - x; if (Math.abs(delta) > 48 && state.carousel) { state.cardIndex += delta < 0 ? 1 : -1; persist(); paintCards(); } }, { passive: true });
   return panel;
 }
-function makeLibrary() {
-  const shade = create('div', 'hsbc-library-shade'); shade.addEventListener('click', closeLibrary);
-  const panel = create('aside', 'hsbc-library'); panel.setAttribute('aria-label', 'Library');
-  const head = create('header', 'hsbc-library-head', `<button class="hsbc-library-back" aria-label="Home">${icons.back}</button><strong>Library</strong><span class="hsbc-head-spacer"></span><button aria-label="Notifications">${icons.bell}</button><button class="hsbc-library-user" aria-label="User settings">${icons.person}</button><button class="hsbc-library-close" aria-label="Close">${icons.close}</button>`);
-  head.querySelector('.hsbc-library-back').addEventListener('click', closeLibrary); head.querySelector('.hsbc-library-user').addEventListener('click', actions.settings); head.querySelector('.hsbc-library-close').addEventListener('click', closeLibrary);
-  const content = create('div', 'hsbc-library-content');
-  const hero = makeButton('Products and services', `${icons.wallet}<span class="hsbc-illustration">${illustration('wallet')}</span>`, actions.characters, 'hsbc-library-hero');
-  const grid = create('div', 'hsbc-library-grid');
-  [['Money trends', 'chart', actions.world], ['Insurance', 'umbrella', actions.backgrounds], ['Security and fraud', 'shield', actions.advanced]].forEach(([title, icon, fn]) => grid.appendChild(makeButton(title, `${icons[icon]}<span class="hsbc-illustration">${illustration(icon)}</span>`, fn, 'hsbc-library-tile')));
-  const more = create('div', 'hsbc-library-grid hsbc-library-grid-more');
-  [['Pay', 'pay'], ['Cards', 'cards'], ['Save & Invest', 'save']].forEach(([title, icon]) => more.appendChild(makeButton(title, icons[icon], actions[icon], 'hsbc-library-mini')));
-  const section = (title, labels) => { const s = create('section', 'hsbc-library-section'); s.innerHTML = `<h3>${title}</h3>`; labels.forEach((label) => { const b = create('button', 'hsbc-library-row', `<span>${label}</span>${icons.arrow}`); b.type = 'button'; s.appendChild(b); }); return s; };
-  content.append(hero, grid, more, section('Your banking', ['Deposit a cheque', 'Deposit cash']), section('Keeping you safe', ['Online security', 'Protect your account', 'Fraud awareness']), section('Help', ['FAQs', 'Applications and requests', 'Your support needs', 'Secure messages', 'Chat with us']));
-  const footer = create('footer', 'hsbc-library-footer', '<small>Version 1.0.0</small><button type="button">Log off</button>');
-  panel.append(head, content, footer);
-  const host = create('div', 'hsbc-library-host'); host.append(shade, panel); return host;
-}
-
-function makeSplash() {
-  const splash = create('div', 'hsbc-splash', `<div class="hsbc-splash-scene"><svg viewBox="0 0 720 680" role="img" aria-label="A quiet lakeside at sunset"><defs><linearGradient id="hsbc-sky" x2="0" y2="1"><stop stop-color="#f8e8e5"/><stop offset=".55" stop-color="#eab6a8"/><stop offset="1" stop-color="#d5d7dc"/></linearGradient><linearGradient id="hsbc-lake" x2="0" y2="1"><stop stop-color="#c9cbd4"/><stop offset="1" stop-color="#aeb5c0"/></linearGradient></defs><path fill="url(#hsbc-sky)" d="M0 0h720v350H0z"/><path fill="#d78c7d" d="m0 300 115-82 80 37 135-142 114 92 70-51 206 126v104H0z"/><path fill="#8d6970" d="m0 310 115-92 80 37 135-142 114 92 70-51 206 126v38H0z" opacity=".7"/><path fill="url(#hsbc-lake)" d="M0 335h720v345H0z"/><path d="M0 354c108 10 159 16 265 5s181-9 275 0 118 13 180 6M0 410c95 7 164 18 276 9s182-12 276 1 109 12 168 8M0 495c130 11 210 19 329 8s240-9 391 8" fill="none" stroke="#f7f3f3" stroke-opacity=".6" stroke-width="3"/><ellipse cx="490" cy="584" rx="25" ry="78" fill="#bd5b53" opacity=".24"/><circle cx="490" cy="366" r="13" fill="#29292c"/><path fill="#db0011" d="M473 382q17-13 34 0l15 76-13 6-9-43 3 68h-27l2-68-10 43-13-6z"/><path d="m478 486-6 70h12l8-70m12 0 8 70h12l-5-70" fill="#29292c"/></svg></div><div class="hsbc-splash-copy"><span class="hsbc-splash-brand"><i></i><b>HSBC</b></span><p class="hsbc-splash-greeting"></p><h1></h1><p class="hsbc-splash-subtitle">Your conversations, thoughtfully arranged.</p><button class="hsbc-splash-enter" type="button">Continue <span>→</span></button><small>TEST EDITION · SILLYTAVERN</small></div>`);
-  const hour = new Date().getHours();
-  const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
-  const persona = document.querySelector('#your_name')?.textContent?.trim();
-  splash.querySelector('.hsbc-splash-greeting').textContent = greeting;
-  splash.querySelector('h1').textContent = persona && !persona.startsWith('[') ? persona : 'Welcome back';
-  const dismiss = () => { splash.classList.add('is-leaving'); window.setTimeout(() => splash.remove(), 460); };
-  splash.querySelector('.hsbc-splash-enter').addEventListener('click', dismiss);
-  window.setTimeout(dismiss, 2400);
-  return splash;
-}
-
-let skinOrderObserver;
-function enforceSkinOrder() {
-  const moveSkinLast = () => {
-    const skin = [...document.querySelectorAll('link[rel="stylesheet"]')].find((link) => /\/hsbc-tavern\/style\.css(?:\?|$)/.test(link.href));
-    if (skin && document.head.lastElementChild !== skin) document.head.appendChild(skin);
+function art(kind) {
+  const paths = {
+    wallet: '<rect x="8" y="5" width="26" height="29" rx="3"/><path d="M8 11h26M26 23h8v7h-8a3.5 3.5 0 0 1 0-7z"/><circle cx="28" cy="26.5" r=".8"/>',
+    chart: '<path d="M23 6a17 17 0 1 0 17 17H23z"/><path d="M27 5v14h14A17 17 0 0 0 27 5z"/><circle cx="15" cy="28" r="2"/>',
+    umbrella: '<path d="M5 23a18 18 0 0 1 36 0z"/><path d="M23 23v16a4 4 0 0 0 8 0"/>',
+    shield: '<path d="M23 43S8 36 8 23V11l15-6 15 6v12c0 13-15 20-15 20z"/><path d="m16 23 5 5 10-11"/>',
   };
-  moveSkinLast();
-  if (!skinOrderObserver) {
-    skinOrderObserver = new MutationObserver(moveSkinLast);
-    skinOrderObserver.observe(document.head, { childList: true, subtree: true, characterData: true });
-  }
+  const extras = kind === 'chart' ? '<circle cx="12" cy="36" r="5" fill="#d7b55e"/><path d="M7 36h10" stroke="#fff" stroke-width="1"/>' : '';
+  return `<svg class="hsbc-illustration" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="25" r="22" fill="#f3f4f6"/><g fill="none" stroke="#db0011" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">${paths[kind]}</g>${extras}<path d="M5 38h14v6H5z" fill="#db0011"/></svg>`;
 }
-
+function openLibrary() { closeTools(); const host = document.querySelector('.hsbc-library-host'); host.classList.add('is-open'); document.body.classList.add('hsbc-library-open'); host.querySelector('.hsbc-library-close').focus(); }
+function closeLibrary() { document.querySelector('.hsbc-library-host')?.classList.remove('is-open'); document.body.classList.remove('hsbc-library-open'); }
+function makeLibrary() {
+  const host = el('div', 'hsbc-library-host'); const shade = el('div', 'hsbc-library-shade'); shade.addEventListener('click', closeLibrary);
+  const drawer = el('aside', 'hsbc-library'); drawer.setAttribute('aria-label', 'Library');
+  const head = el('header', 'hsbc-library-head', `<button class="hsbc-library-home" aria-label="Home">${I.home}</button><i></i><strong>Library</strong><span></span><button aria-label="Notifications">${I.bell}</button><button class="hsbc-library-user" aria-label="User settings">${I.person}</button><button class="hsbc-library-close" aria-label="Close">${I.close}</button>`);
+  head.querySelector('.hsbc-library-home').onclick = closeLibrary; head.querySelector('.hsbc-library-close').onclick = closeLibrary; head.querySelector('.hsbc-library-user').onclick = () => { closeLibrary(); actions.settings(); };
+  const content = el('div', 'hsbc-library-content');
+  const hero = button('Products and services', art('wallet'), () => { closeLibrary(); actions.characters(); }, 'hsbc-library-hero');
+  const grid = el('div', 'hsbc-library-grid'); [['Money trends', 'chart', actions.world], ['Insurance', 'umbrella', actions.backgrounds], ['Security and fraud', 'shield', actions.advanced]].forEach(([label, kind, fn]) => grid.append(button(label, art(kind), () => { closeLibrary(); fn(); }, 'hsbc-library-tile')));
+  const secondary = el('div', 'hsbc-library-shortcuts'); [['Pay', actions.pay], ['Cards', showCards], ['Save & Invest', actions.save]].forEach(([label, fn]) => secondary.append(button(label, '', fn, 'hsbc-library-shortcut')));
+  const section = (title, labels) => { const s = el('section', 'hsbc-library-section'); const h = document.createElement('h2'); h.textContent = title; s.append(h); labels.forEach(label => { const row = button(label, I.arrow, null, 'hsbc-library-row'); row.disabled = true; s.append(row); }); return s; };
+  content.append(hero, grid, secondary, section('Your banking', ['Deposit a cheque', 'Deposit cash']), section('Keeping you safe', ['Online security', 'Protect your account', 'Fraud awareness']), section('Help', ['FAQs', 'Applications and requests', 'Your support needs', 'Secure messages', 'Chat with us']));
+  const footer = el('footer', 'hsbc-library-footer', '<small>Version 0.4.0</small><button type="button" disabled>Log off</button>'); drawer.append(head, content, footer); host.append(shade, drawer); return host;
+}
+function splash() {
+  const s = el('div', 'hsbc-splash', `<div class="hsbc-splash-art"><svg viewBox="0 0 720 680" aria-hidden="true"><defs><linearGradient id="hsbc-sky" x2="0" y2="1"><stop stop-color="#f8e8e5"/><stop offset=".55" stop-color="#eab6a8"/><stop offset="1" stop-color="#d5d7dc"/></linearGradient><linearGradient id="hsbc-lake" x2="0" y2="1"><stop stop-color="#c9cbd4"/><stop offset="1" stop-color="#aeb5c0"/></linearGradient></defs><path fill="url(#hsbc-sky)" d="M0 0h720v350H0z"/><path fill="#8d6970" d="m0 310 115-92 80 37 135-142 114 92 70-51 206 126v38H0z"/><path fill="url(#hsbc-lake)" d="M0 335h720v345H0z"/><path d="M0 354c108 10 159 16 265 5s181-9 275 0 118 13 180 6M0 410c95 7 164 18 276 9s182-12 276 1 109 12 168 8" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="3"/><circle cx="490" cy="366" r="13" fill="#29292c"/><path fill="#db0011" d="M473 382q17-13 34 0l15 76-13 6-9-43 3 68h-27l2-68-10 43-13-6z"/></svg></div><div class="hsbc-splash-copy"><div class="hsbc-splash-brand"><i></i> HSBC UK</div><small class="hsbc-greeting"></small><h1></h1><p>Your conversations, thoughtfully arranged.</p><button type="button">Continue ${I.arrow}</button></div>`);
+  const hour = new Date().getHours(); s.querySelector('.hsbc-greeting').textContent = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
+  const persona = document.querySelector('#your_name')?.textContent?.trim(); s.querySelector('h1').textContent = persona && !persona.startsWith('[') ? persona : 'Welcome back';
+  const dismiss = () => { s.classList.add('is-leaving'); setTimeout(() => s.remove(), 450); }; s.querySelector('button').onclick = dismiss; setTimeout(dismiss, 2100); return s;
+}
+let skinObserver;
+function pinSkinLast() { const link = [...document.querySelectorAll('link[rel="stylesheet"]')].find(x => /hsbc-tavern\/style\.css/.test(x.href)); if (link && document.head.lastElementChild !== link) document.head.append(link); }
 function mount() {
   if (!document.body || document.querySelector('.hsbc-nav')) return;
-  document.body.classList.add('hsbc-tavern');
-  enforceSkinOrder();
-  document.getElementById('preloader')?.remove();
-  const nav = makeNavigation(); document.body.prepend(nav);
-  const chat = document.querySelector('#chat'); if (chat) { chat.before(makeChatTools()); chat.before(makeCardPanel()); }
-  document.body.append(makeLibrary());
-  const textarea = document.querySelector('#send_textarea');
-  const applyComposer = () => {
-    const area = document.querySelector('#send_textarea'); if (!area) return;
-    if (area.placeholder !== 'Start chat') area.placeholder = 'Start chat';
-    area.setAttribute('aria-label', 'Start chat');
-  };
-  applyComposer();
-  const observer = new MutationObserver((records) => {
-    if (records.some((record) => record.target?.id === 'custom-style' || record.target?.closest?.('#custom-style'))) enforceSkinOrder();
-    applyComposer();
-  });
-  observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['placeholder', 'style', 'class'] });
-  observer.observe(document.head, { childList: true, subtree: true, characterData: true });
-  document.body.append(makeSplash());
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLibrary(); });
+  document.body.classList.add('hsbc-tavern'); document.getElementById('preloader')?.remove();
+  const navbar = nav(); const shell = document.querySelector('#sheld'); if (shell) { shell.prepend(navbar); const menu = makeTools(); const form = document.querySelector('#nonQRFormItems'); if (form) { document.querySelector('#leftSendForm')?.prepend(menu.trigger); form.append(menu.panel); } }
+  const chat = document.querySelector('#chat'); if (chat) chat.before(makeCards()); document.body.append(makeLibrary());
+  const area = document.querySelector('#send_textarea'); if (area) { area.placeholder = 'Start chat'; area.setAttribute('aria-label', 'Start chat'); }
+  document.body.append(splash());
+  document.addEventListener('click', e => { const panel = document.querySelector('.hsbc-tools'); if (panel?.classList.contains('is-open') && !e.target.closest('.hsbc-tools,.hsbc-tools-trigger')) closeTools(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeLibrary(); closeTools(); } });
+  const observer = new MutationObserver(() => { const a = document.querySelector('#send_textarea'); if (a && a.placeholder !== 'Start chat') a.placeholder = 'Start chat'; messageDecor(); if (document.querySelector('.hsbc-tools.is-open')) renderMenu(); if (document.body.classList.contains('hsbc-cards-open')) paintCards(); });
+  observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['placeholder', 'class', 'style'] });
+  pinSkinLast(); if (!skinObserver) { skinObserver = new MutationObserver(pinSkinLast); skinObserver.observe(document.head, { childList: true, subtree: true }); }
+  messageDecor();
 }
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mount, { once: true }); else mount();
