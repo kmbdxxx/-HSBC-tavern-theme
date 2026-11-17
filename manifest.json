@@ -6,7 +6,7 @@
   "js": "index.js",
   "css": "style.css",
   "author": "kmbdxxx",
-  "version": "1.0.3",
-  "description": "HSBC UK SillyTavern interface with resilient native subpages, prompt editing overlays, and privacy-safe account styling.",
+  "version": "1.0.4",
+  "description": "HSBC UK SillyTavern interface with resilient native subpages, responsive splash controls, and privacy-safe account styling.",
   "homePage": "https://github.com/kmbdxxx/tavern-test"
 }
