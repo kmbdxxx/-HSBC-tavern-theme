@@ -1,11 +1,11 @@
 {
   "display_name": "HSBC Welcome",
-  "loading_order": 90,
+  "loading_order": 110,
   "requires": [],
   "optional": [],
   "js": "index.js",
+  "css": "style.css",
   "author": "kmbdxxx",
-  "version": "2.0.1",
-  "description": "A safe HSBC-inspired welcome view that leaves SillyTavern's native interface untouched.",
-  "homePage": "https://github.com/kmbdxxx/tavern-test"
+  "version": "2.1.1",
+  "description": "The complete HSBC internal theme with the current safe welcome view."
 }

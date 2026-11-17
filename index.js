@@ -13,7 +13,7 @@ function installStyle() {
     const style = document.createElement('style');
     style.id = STYLE_ID;
     style.textContent = `
-        #${SPLASH_ID} { position:fixed; inset:0; z-index:2147483646; display:flex; flex-direction:column; overflow:hidden; background:#fff; color:#222; font-family:Arial,"Noto Sans",sans-serif; transition:opacity .2s ease,visibility .2s ease; }
+        #${SPLASH_ID} { position:fixed; inset:0; z-index:2147483646; display:flex; flex-direction:column; width:100vw; max-width:none; height:100dvh; max-height:none; margin:0; padding:0; overflow:hidden; border:0; background:#fff; color:#222; font-family:Arial,"Noto Sans",sans-serif; transition:opacity .2s ease,visibility .2s ease; }
         #${SPLASH_ID}.is-leaving { opacity:0; visibility:hidden; pointer-events:none; }
         #${SPLASH_ID} .hsbc-safe-red { display:grid; place-items:center; flex:1 1 54%; min-height:210px; padding:32px; background:#db0011; }
         #${SPLASH_ID} .hsbc-safe-logo { display:block; width:min(42vw,250px); min-width:150px; }
@@ -28,15 +28,25 @@ function installStyle() {
         #${SPLASH_ID} button.hsbc-safe-pin::before { content:'\\25A6'; display:inline-block; margin-right:12px; font-size:20px; line-height:0; vertical-align:-1px; }
         #${SPLASH_ID} button:focus-visible { outline:3px solid #222; outline-offset:3px; }
         @media (max-width:600px) { #${SPLASH_ID} .hsbc-safe-red { min-height:42vh; } #${SPLASH_ID} .hsbc-safe-logo { width:min(58vw,230px); min-width:0; } }
+        dialog.popup.transparent_dialogue_popup:has(.popup-content:empty) { display:none!important; pointer-events:none!important; }
     `;
     document.head.append(style);
 }
 
 function dismissEmptyBlockingDialogs() {
     for (const dialog of document.querySelectorAll('dialog[open].popup.transparent_dialogue_popup')) {
-        const hasContent = dialog.textContent.trim().length > 0
-            || Boolean(dialog.querySelector('button,input,textarea,select,[contenteditable="true"],img,iframe,video,canvas'));
-        if (!hasContent) dialog.close();
+        const content = dialog.querySelector('.popup-content');
+        const hasContent = Boolean(content && (content.textContent.trim().length > 0
+            || content.querySelector('button,input,textarea,select,[contenteditable="true"],img,iframe,video,canvas')));
+        if (!hasContent) {
+            dialog.dataset.hsbcEmptyDialog = 'true';
+            dialog.style.setProperty('display', 'none', 'important');
+            dialog.style.setProperty('pointer-events', 'none', 'important');
+        } else if (dialog.dataset.hsbcEmptyDialog === 'true') {
+            delete dialog.dataset.hsbcEmptyDialog;
+            dialog.style.removeProperty('display');
+            dialog.style.removeProperty('pointer-events');
+        }
     }
 }
 
@@ -44,6 +54,21 @@ function guardAgainstEmptyBlockingDialogs() {
     dismissEmptyBlockingDialogs();
     const observer = new MutationObserver(() => dismissEmptyBlockingDialogs());
     observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['open'] });
+    window.setInterval(dismissEmptyBlockingDialogs, 200);
+}
+
+function loadInternalTheme() {
+    if (window.__hsbcInternalThemeRequested) return;
+    window.__hsbcInternalThemeRequested = true;
+    window.__hsbcSafeSplashMounted = true;
+    // SillyTavern runs extension entries as ES modules. Use the same dynamic
+    // module import pattern as Claude Web rather than injecting a classic
+    // script, which can download successfully without executing here.
+    window.setTimeout(() => {
+        import('/scripts/extensions/third-party/tavern-test/hsbc-internal.js?v=2.1.2')
+            .then(() => { window.__hsbcInternalThemeLoaded = true; })
+            .catch(error => { window.__hsbcInternalMountError = error?.stack || String(error); });
+    }, 0);
 }
 
 function mountSplash() {
@@ -56,7 +81,7 @@ function mountSplash() {
     }
     guardAgainstEmptyBlockingDialogs();
     installStyle();
-    const screen = document.createElement('section');
+    const screen = document.createElement('dialog');
     screen.id = SPLASH_ID;
     screen.tabIndex = -1;
     screen.setAttribute('aria-label', 'Welcome screen');
@@ -69,7 +94,7 @@ function mountSplash() {
         if (closed) return;
         closed = true;
         screen.classList.add('is-leaving');
-        window.setTimeout(() => screen.remove(), 220);
+        window.setTimeout(() => { if (screen.open) screen.close(); screen.remove(); }, 220);
     };
     for (const button of screen.querySelectorAll('button')) button.addEventListener('click', close, { once: true });
     screen.addEventListener('pointerdown', close, { once: true });
@@ -77,7 +102,9 @@ function mountSplash() {
         if (event.key === 'Escape' || event.key === 'Enter') close();
     });
     document.body.append(screen);
+    screen.showModal();
     screen.focus({ preventScroll: true });
+    loadInternalTheme();
     window.setTimeout(close, 5000);
 }
 
