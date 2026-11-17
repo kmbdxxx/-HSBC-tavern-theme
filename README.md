@@ -2,6 +2,10 @@
 
 A SillyTavern third-party extension that places an HSBC UK inspired interface shell over SillyTavern while preserving its native chat, settings, persona, character, prompt, API, world info, and extension controls.
 
+## Release 1.0.4
+
+- Fixed splash controls that could appear responsive visually while an invisible loading layer intercepted taps. The loader now never captures pointer events, and splash buttons use a capture-phase close fallback.
+
 ## Release 1.0.3
 
 - Restored the Cards page by rendering its controls before attaching event handlers.
