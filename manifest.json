@@ -6,7 +6,7 @@
   "js": "index.js",
   "css": "style.css",
   "author": "kmbdxxx",
-  "version": "0.3.0",
-  "description": "HSBC UK 风格的 SillyTavern 第三方前端美化扩展（测试版）。",
+  "version": "0.4.0",
+  "description": "HSBC UK inspired responsive SillyTavern interface extension (test edition).",
   "homePage": "https://github.com/kmbdxxx/tavern-test"
 }
