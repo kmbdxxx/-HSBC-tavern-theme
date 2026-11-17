@@ -96,3 +96,76 @@ body.hsbc-tavern input,body.hsbc-tavern select,body.hsbc-tavern textarea { color
 @media (min-width:900px) { .hsbc-nav { padding-left:max(calc((100vw - 1160px)/2),30px); padding-right:max(calc((100vw - 1160px)/2),30px); } .hsbc-chat-tools { margin-top:6px; border:1px solid #e9eaec; border-radius:8px 8px 0 0; } }
 @media (max-width:520px) { .hsbc-nav { height:56px; gap:3px; padding:0 8px; } body.hsbc-tavern #sheld { padding-top:56px!important; } body.hsbc-tavern #top-settings-holder { padding-top:56px!important; } .hsbc-nav-brand { flex-basis:32px; padding-right:7px; } .hsbc-nav .hsbc-action { font-size:10px; } .hsbc-nav .hsbc-action svg { width:18px; height:18px; } .hsbc-nav-menu { flex-basis:32px; } .hsbc-chat-tools { padding:7px 10px; } .hsbc-card-panel { padding:9px 10px; } .hsbc-card-controls { gap:5px; font-size:11px; } .hsbc-card-controls>strong { font-size:12px; } .hsbc-card-controls button,.hsbc-card-upload { padding:5px 7px; } .hsbc-library { width:min(410px,94vw); } }
 @media (prefers-reduced-motion:reduce) { *,*:before,*:after { transition:none!important; scroll-behavior:auto!important; } }
+
+/* Take visual precedence over host themes and extension supplied custom CSS. */
+body.hsbc-tavern,
+body.hsbc-tavern #sheld,
+body.hsbc-tavern #chat,
+body.hsbc-tavern #form_sheld,
+body.hsbc-tavern #send_form,
+body.hsbc-tavern #top-settings-holder {
+  color:var(--hsbc-ink)!important;
+  background-color:var(--hsbc-bg)!important;
+  background-image:none!important;
+  font-family:Arial,"Noto Sans",sans-serif!important;
+}
+body.hsbc-tavern *,
+body.hsbc-tavern *::before,
+body.hsbc-tavern *::after { background-image:none!important; }
+body.hsbc-tavern #bg1,
+body.hsbc-tavern #bg2,
+body.hsbc-tavern #bg3 { display:none!important; }
+body.hsbc-tavern #sheld { width:100%!important; max-width:none!important; min-width:0!important; overflow-x:hidden!important; }
+body.hsbc-tavern #chat {
+  width:100%!important; max-width:100%!important; min-width:0!important;
+  overflow-x:hidden!important; background:#f3f4f6!important; color:#222!important;
+}
+body.hsbc-tavern #chat .mes,
+body.hsbc-tavern #chat .mes_block,
+body.hsbc-tavern #chat .mes_text,
+body.hsbc-tavern #chat .mes_header,
+body.hsbc-tavern #chat .ch_name,
+body.hsbc-tavern #chat .timestamp,
+body.hsbc-tavern #chat .mesid {
+  font-family:Arial,"Noto Sans",sans-serif!important;
+  color:#222!important;
+  text-shadow:none!important;
+}
+body.hsbc-tavern #chat .mes { background:transparent!important; border:0!important; box-shadow:none!important; }
+body.hsbc-tavern #chat .mes_header { color:#333e48!important; font-size:14px!important; }
+body.hsbc-tavern #chat .mes .ch_name { color:#333e48!important; font-size:16px!important; font-weight:600!important; }
+body.hsbc-tavern #chat .mes_text {
+  line-height:1.55!important; font-size:16px!important;
+  background:#fff!important; border:1px solid #e4e6e9!important;
+  box-shadow:none!important;
+}
+body.hsbc-tavern #chat .mes[is_user="true"] .mes_text { background:#e8edf0!important; }
+body.hsbc-tavern #chat .mes_text:before { background:none!important; text-shadow:none!important; }
+body.hsbc-tavern #chat .mes .avatar img { border-radius:50%!important; }
+body.hsbc-tavern :is(.drawer,.drawer-content,.inline-drawer,.inline-drawer-content) {
+  color:#222!important; background:#fff!important; background-image:none!important;
+  border-color:#e4e6e9!important; box-shadow:none;
+}
+body.hsbc-tavern :is(input,select,textarea,.text_pole) {
+  color:#222!important; background-color:#fff!important; border-color:#b8c0c6!important;
+  box-shadow:none!important; font-family:Arial,"Noto Sans",sans-serif!important;
+}
+.hsbc-nav { box-sizing:border-box; width:100%; }
+.hsbc-nav-brand { flex:0 0 54px; width:54px; height:38px; padding:0 14px 0 0; border:0; border-right:1px solid #333e48; background:transparent; cursor:pointer; }
+.hsbc-nav-brand svg { width:34px; height:34px; color:#222; fill:#222; stroke:#222; }
+.hsbc-nav-brand i { width:33px; height:6px; margin-top:-5px; background:#db0011; }
+.hsbc-nav .hsbc-action { flex-direction:row; font-size:clamp(14px,1.4vw,18px); }
+.hsbc-nav .hsbc-action span { font-size:inherit; }
+.hsbc-nav .hsbc-action svg { display:none!important; }
+.hsbc-nav .hsbc-action:after { display:none; }
+.hsbc-nav-menu { margin-left:auto; }
+.hsbc-persona-card { background-image:linear-gradient(125deg,#3b444b,#899198 48%,#d2d5d7)!important; }
+@media (max-width:520px) {
+  .hsbc-nav { height:56px; }
+  body.hsbc-tavern #sheld,body.hsbc-tavern #top-settings-holder { padding-top:56px!important; }
+  .hsbc-nav-brand { flex-basis:44px; width:44px; padding-right:8px; }
+  .hsbc-nav-brand svg { width:30px; height:30px; }
+  .hsbc-nav-brand i { width:29px; }
+  .hsbc-nav .hsbc-action { font-size:clamp(11px,3.2vw,14px); }
+  .hsbc-nav-menu { flex:0 0 32px; }
+}
