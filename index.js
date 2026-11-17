@@ -195,7 +195,13 @@ function mount() {
   document.body.append(splash());
   document.addEventListener('click', e => { const panel = document.querySelector('.hsbc-tools'); if (panel?.classList.contains('is-open') && !e.target.closest('.hsbc-tools,.hsbc-tools-trigger')) closeTools(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeLibrary(); closeTools(); } });
-  const observer = new MutationObserver(() => { const a = document.querySelector('#send_textarea'); if (a && a.placeholder !== 'Start chat') a.placeholder = 'Start chat'; messageDecor(); if (document.querySelector('.hsbc-tools.is-open')) renderMenu(); if (document.body.classList.contains('hsbc-cards-open')) paintCards(); });
+  const observer = new MutationObserver(records => {
+    const area = document.querySelector('#send_textarea'); if (area && area.placeholder !== 'Start chat') area.placeholder = 'Start chat';
+    const changed = selector => records.some(record => { const target = record.target.nodeType === Node.ELEMENT_NODE ? record.target : record.target.parentElement; return target?.closest(selector); });
+    if (changed('#chat')) messageDecor();
+    if (changed('#options,#extensionsMenu') && document.querySelector('.hsbc-tools.is-open')) renderMenu();
+    if (changed('#user_avatar_block') && document.body.classList.contains('hsbc-cards-open')) paintCards();
+  });
   observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['placeholder', 'class', 'style'] });
   pinSkinLast(); if (!skinObserver) { skinObserver = new MutationObserver(pinSkinLast); skinObserver.observe(document.head, { childList: true, subtree: true }); }
   messageDecor();
