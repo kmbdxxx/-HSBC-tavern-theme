@@ -406,3 +406,89 @@ body.hsbc-ui-mounted #bg_custom,body.hsbc-ui-mounted #bg1,body.hsbc-ui-mounted #
 @media(max-width:600px){.hsbc-persona-card.is-carousel{max-width:min(100%,390px)!important;border-radius:11px!important;clip-path:inset(0 round 11px)!important}.hsbc-card-mask{font-size:10px!important}}
 /* Keep SillyTavern's native confirmation/edit dialog functional above the app shell. */
 body.hsbc-ui-mounted #shadow_popup{position:fixed!important;z-index:100100!important;inset:0!important;width:100vw!important;height:100vh!important;height:100dvh!important;}
+/* 1.0.0 strict HSBC visual audit: centered sections, clean controls, and native welcome replacement. */
+#hsbc-subpage,#hsbc-subpage *{box-sizing:border-box!important}
+#hsbc-native-host{width:100%!important;min-width:0!important;padding:0 0 28px!important}
+#hsbc-native-host>.hsbc-native-panel{width:calc(100% - 32px)!important;max-width:680px!important;margin:12px auto!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;overflow:visible!important}
+#hsbc-native-host>.hsbc-native-panel :is(.inline-drawer-toggle,.inline-drawer-header,.drawer-header,.drawer-toggle,.standoutHeader){width:calc(100% - 32px)!important;max-width:680px!important;min-height:42px!important;margin:12px auto 0!important;padding:6px 0!important;border:0!important;border-radius:0!important;background:#F3F4F6!important;background-image:none!important;color:#222!important;font-size:15px!important;font-weight:600!important;box-shadow:none!important}
+#hsbc-native-host>.hsbc-native-panel :is(.inline-drawer-content,.settings-panel,.api-settings){width:100%!important;max-width:none!important;margin:0 0 14px!important;padding:0!important;border:1px solid #E5E7EB!important;border-radius:4px!important;background:#fff!important;background-image:none!important;color:#222!important;box-shadow:none!important}
+#hsbc-native-host>.hsbc-native-panel :is(.inline-drawer-content,.settings-panel,.api-settings)>:is(.flex-container,.range-block,.form-group,.settings_block,.completion_prompt_manager,.flex-container>*),#hsbc-native-host>.hsbc-native-panel :is(.inline-drawer-content,.settings-panel,.api-settings)>.flex-container{position:relative!important;min-width:0!important;margin:0 16px!important;padding:11px 0!important;border:0!important;border-radius:0!important;background:transparent!important;background-image:none!important;color:#222!important;box-shadow:none!important}
+#hsbc-native-host>.hsbc-native-panel :is(.inline-drawer-content,.settings-panel,.api-settings)>:is(.flex-container,.range-block,.form-group,.settings_block,.completion_prompt_manager):not(:last-child){border-bottom:1px solid #E5E7EB!important}
+#hsbc-native-host>.hsbc-native-panel :is(.range-block,.form-group,.settings_block,.completion_prompt_manager,.api-settings) :is(.range-block,.form-group,.settings_block){margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
+#hsbc-native-host>.hsbc-native-panel :is(h1,h2,h3,h4,h5,label,.label,.title,.name_label){color:#222!important;opacity:1!important}
+#hsbc-native-host>.hsbc-native-panel :is(small,.text_muted,.hint,.help-block,.note,.description,.token_counter,.extension_token_counter,.ch_description,.setting_help){color:#595959!important;opacity:1!important}
+#hsbc-native-host>.hsbc-native-panel :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),textarea,select,.text_pole){min-height:35px!important;border:1px solid #8C939A!important;border-radius:2px!important;background:#fff!important;color:#222!important;box-shadow:none!important}
+#hsbc-native-host>.hsbc-native-panel :is(button,.menu_button,.menu_button_icon){min-height:32px!important;border:1px solid #8C939A!important;border-radius:3px!important;background:#fff!important;background-image:none!important;color:#333E48!important;box-shadow:none!important;text-shadow:none!important}
+#hsbc-native-host>.hsbc-native-panel :is(button,.menu_button,.menu_button_icon).primary,#hsbc-native-host>.hsbc-native-panel :is(button,.menu_button).red_button,#hsbc-native-host>.hsbc-native-panel #extensions_install_btn{border-color:#DB0011!important;background:#DB0011!important;color:#fff!important}
+#hsbc-native-host>.hsbc-native-panel input[type="range"]{width:100%!important;height:24px!important;min-height:24px!important;padding:0!important;border:0!important;appearance:none!important;background:transparent!important;accent-color:#DB0011!important;box-shadow:none!important}
+#hsbc-native-host>.hsbc-native-panel input[type="range"]::-webkit-slider-runnable-track{height:3px!important;border:0!important;border-radius:3px!important;background:linear-gradient(to right,#DB0011 0%,#DB0011 var(--hsbc-range-progress,45%),#D0D5DD var(--hsbc-range-progress,45%),#D0D5DD 100%)!important}
+#hsbc-native-host>.hsbc-native-panel input[type="range"]::-moz-range-track{height:3px!important;border:0!important;border-radius:3px!important;background:#D0D5DD!important}
+#hsbc-native-host>.hsbc-native-panel input[type="range"]::-moz-range-progress{height:3px!important;background:#DB0011!important}
+#hsbc-native-host>.hsbc-native-panel input[type="range"]::-webkit-slider-thumb{width:18px!important;height:18px!important;margin-top:-7.5px!important;border:2px solid #DB0011!important;border-radius:50%!important;background:#fff!important;box-shadow:0 1px 4px #2223!important;appearance:none!important}
+#hsbc-native-host>.hsbc-native-panel input[type="range"]::-moz-range-thumb{width:14px!important;height:14px!important;border:2px solid #DB0011!important;border-radius:50%!important;background:#fff!important;box-shadow:0 1px 4px #2223!important}
+#hsbc-native-host>.hsbc-native-panel input[type="checkbox"],#hsbc-native-host>.hsbc-native-panel input[type="radio"]{width:18px!important;height:18px!important;min-width:18px!important;min-height:18px!important;margin:0 5px 0 0!important;appearance:none!important;border:1.5px solid #8C939A!important;border-radius:3px!important;background:#fff!important;accent-color:#DB0011!important;vertical-align:middle!important}
+#hsbc-native-host>.hsbc-native-panel input[type="checkbox"]:checked{border-color:#DB0011!important;background:#DB0011!important;background-image:none!important;position:relative!important}
+#hsbc-native-host>.hsbc-native-panel input[type="radio"]{border-radius:50%!important}
+#hsbc-native-host>.hsbc-native-panel input[type="radio"]:checked{border:5px solid #DB0011!important}
+#hsbc-native-host>.hsbc-native-panel :is(.inline-drawer-content,.settings-panel) hr,#hsbc-native-host>.hsbc-native-panel hr{width:calc(100% - 32px)!important;margin:0 auto!important;border:0!important;border-top:1px solid #E5E7EB!important;opacity:1!important}
+#hsbc-chat-viewport #chat .welcomePanel,#hsbc-chat-viewport #chat [id*="welcome" i],#hsbc-chat-viewport #chat [class*="welcome" i],#hsbc-chat-viewport #chat .recentChatsTitle,#hsbc-chat-viewport #chat .welcomeRecent,#hsbc-chat-viewport #chat .welcomeShortcuts,#hsbc-chat-viewport #chat .temporary_chat_pill,#hsbc-chat-viewport #chat .temp_chat_pill{display:none!important;visibility:hidden!important;max-height:0!important;min-height:0!important;margin:0!important;padding:0!important;border:0!important}
+#hsbc-chat-viewport #chat> :not(.mes){display:none!important;visibility:hidden!important}
+.hsbc-brand-mark{display:block!important;width:32px!important;height:16px!important;flex:0 0 auto!important;overflow:visible!important}
+.hsbc-account-card>.hsbc-brand-mark{width:35px!important;height:19px!important}
+.hsbc-ai-hex{position:absolute!important;left:-23px!important;top:5px!important;width:16px!important;height:8px!important;overflow:visible!important}
+.hsbc-recent-avatar{width:40px!important;height:40px!important;flex:0 0 40px!important;border-radius:50%!important;object-fit:cover!important;background:#E5E7EB!important}
+.hsbc-recent-avatar-fallback{display:grid!important;place-items:center!important;color:#68737B!important}
+.hsbc-recent-avatar-fallback svg{width:20px!important;height:20px!important}
+.hsbc-recent-row>img:first-child,.hsbc-recent-row>.hsbc-recent-avatar:first-child{width:40px!important;height:40px!important;flex-basis:40px!important;border-radius:50%!important}
+.hsbc-recent-row>svg:last-child{margin-left:auto!important}
+.hsbc-persona-action-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;padding:7px 16px!important}
+.hsbc-persona-action-grid button{min-height:63px!important;border-bottom:1px solid #E5E7EB!important}
+.hsbc-persona-action-grid button:nth-last-child(-n+2){border-bottom:0!important}
+.hsbc-action-label{display:flex!important;flex-direction:column!important;min-width:0!important;gap:2px!important}
+.hsbc-action-label small{display:none!important;color:#666!important;font-size:11px!important;line-height:1.25!important;font-weight:400!important}
+#hsbc-cards-page.is-bilingual .hsbc-action-label small{display:block!important}
+.hsbc-persona-section-head{width:calc(100% - 32px)!important;max-width:680px!important;min-height:46px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important;margin:12px auto 0!important;padding:0 14px!important;background:#F3F4F6!important;color:#222!important}
+.hsbc-persona-section-head h2{margin:0!important;font-size:15px!important;color:#222!important}
+.hsbc-persona-section-head>label{display:flex!important;align-items:center!important;gap:8px!important;color:#595959!important;font-size:11px!important;white-space:nowrap!important}
+.hsbc-persona-section-head input{width:36px!important;height:20px!important;appearance:none!important;border:1px solid #8C939A!important;border-radius:12px!important;background:#D0D5DD!important;position:relative!important}
+.hsbc-persona-section-head input:checked{border-color:#DB0011!important;background:#DB0011!important}
+.hsbc-persona-section-head input::after{content:""!important;position:absolute!important;top:2px!important;left:2px!important;width:14px!important;height:14px!important;border-radius:50%!important;background:#fff!important;transition:transform .16s ease!important}
+.hsbc-persona-section-head input:checked::after{transform:translateX(16px)!important}
+.hsbc-persona-native-wrap>h2{display:none!important}
+.hsbc-skin-picker{position:relative!important;display:flex!important;flex-direction:column!important;gap:6px!important;color:#222!important;font-size:12px!important}
+.hsbc-skin-picker>button{width:100%!important;min-height:38px!important;padding:7px 32px 7px 10px!important;text-align:left!important;border:1px solid #8C939A!important;border-radius:2px!important;background:#fff!important;color:#222!important;position:relative!important}
+.hsbc-skin-picker>button::after{content:""!important;position:absolute!important;right:11px!important;top:13px!important;width:8px!important;height:8px!important;border-right:1.5px solid #595959!important;border-bottom:1.5px solid #595959!important;transform:rotate(45deg)!important}
+#hsbc-card-skin-modal:not([hidden]){position:fixed!important;z-index:100020!important;inset:0!important;width:100vw!important;height:100vh!important;height:100dvh!important;display:flex!important;align-items:center!important;justify-content:center!important;padding:16px!important;background:#2228!important;overflow:hidden!important}
+.hsbc-skin-sheet{width:min(calc(100vw - 28px),520px)!important;max-height:min(82vh,720px)!important;overflow:auto!important;padding:3px 0 8px!important;border:1px solid #D0D5DD!important;border-radius:5px!important;background:#fff!important;box-shadow:0 12px 40px #2224!important}
+.hsbc-skin-sheet h3{margin:0!important;padding:15px 16px 12px!important;border-bottom:1px solid #E5E7EB!important;color:#222!important;font-size:15px!important;font-weight:600!important}
+.hsbc-skin-options{padding:0!important}
+.hsbc-skin-option{width:calc(100% - 32px)!important;min-height:47px!important;display:flex!important;align-items:center!important;gap:12px!important;margin:0 16px!important;padding:8px 2px!important;border:0!important;border-bottom:1px solid #E5E7EB!important;border-radius:0!important;background:#fff!important;color:#222!important;text-align:left!important;font-size:13px!important}
+.hsbc-skin-option:last-child{border-bottom:0!important}
+.hsbc-skin-radio{width:18px!important;height:18px!important;flex:0 0 18px!important;border:1.5px solid #8C939A!important;border-radius:50%!important;position:relative!important}
+.hsbc-skin-option.is-selected .hsbc-skin-radio{border:5px solid #DB0011!important}
+.hsbc-card-mask{display:none!important}
+.hsbc-card-foot>span:first-child:empty{display:none!important}
+@media(max-width:600px){#hsbc-native-host{padding:0 0 24px!important}.hsbc-persona-action-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.hsbc-persona-section-head{padding:0 12px!important}.hsbc-recent-row{min-height:62px!important}.hsbc-recent-copy small{max-width:calc(100vw - 112px)!important}}
+
+#hsbc-card-skin-modal[hidden],#hsbc-uk-app [hidden]{display:none!important}
+.hsbc-card-main>.hsbc-brand-mark{width:94px!important;height:47px!important;flex:0 0 94px!important}
+.hsbc-card-brand-name>.hsbc-brand-mark{width:27px!important;height:14px!important;flex-basis:27px!important}
+.hsbc-card-brand>span:last-child{max-width:44%!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+.hsbc-account-wrap{width:min(calc(100% - 32px),620px)!important;margin:0 auto!important}
+.hsbc-account-card{width:100%!important}
+.hsbc-recent-chats{width:100%!important;max-width:620px!important;margin:0 auto!important;padding:4px 16px!important;border:1px solid #E5E7EB!important;border-top:0!important;border-radius:0 0 4px 4px!important;background:#fff!important}
+.hsbc-recent-copy{flex:1 1 auto!important;min-width:0!important}
+.hsbc-recent-copy small{display:-webkit-box!important;-webkit-box-orient:vertical!important;-webkit-line-clamp:2!important;white-space:normal!important;line-height:1.35!important}
+#hsbc-native-host>.hsbc-native-panel :is(.inline-drawer-content,.settings-panel,.api-settings) :is(.range-block,.form-group,.settings_block,.completion_prompt_manager){background:transparent!important;background-image:none!important;border:0!important;border-radius:0!important;box-shadow:none!important}
+#hsbc-native-host>.hsbc-native-panel :is(.inline-drawer-content,.settings-panel,.api-settings) :is(.flex-container,.range-block,.form-group,.settings_block)>:is(.range-block,.form-group,.settings_block){margin:0 16px!important;padding:10px 0!important;border:0!important;border-bottom:1px solid #E5E7EB!important;background:transparent!important}
+#hsbc-native-host>.hsbc-native-panel :is(.inline-drawer-content,.settings-panel,.api-settings) :is(.flex-container,.range-block,.form-group,.settings_block)>:last-child{border-bottom:0!important}
+
+#hsbc-native-host>.hsbc-native-panel>:is(.settings_block,.range-block,.form-group,.completion_prompt_manager){width:100%!important;margin:10px 0 14px!important;padding:0!important;border:1px solid #E5E7EB!important;border-radius:4px!important;background:#fff!important;box-shadow:none!important}
+#hsbc-native-host>.hsbc-native-panel>:is(.settings_block,.range-block,.form-group,.completion_prompt_manager)>*{margin:0 16px!important;padding:11px 0!important;border:0!important;border-bottom:1px solid #E5E7EB!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
+#hsbc-native-host>.hsbc-native-panel input[type="checkbox"]:checked::after{content:""!important;position:absolute!important;left:5px!important;top:1px!important;width:4px!important;height:8px!important;border-right:2px solid #fff!important;border-bottom:2px solid #fff!important;transform:rotate(45deg)!important}
+
+.hsbc-persona-action-grid button:nth-last-child(-n+3){border-bottom:1px solid #E5E7EB!important}
+.hsbc-persona-action-grid button:last-child{border-bottom:0!important}
+
+.hsbc-persona-card.is-carousel{max-width:340px!important}
+@media(max-width:600px){.hsbc-persona-card.is-carousel{max-width:min(340px,calc(100vw - 56px))!important}}

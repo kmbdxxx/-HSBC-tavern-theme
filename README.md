@@ -2,16 +2,15 @@
 
 为 SillyTavern 提供独立全屏的 HSBC UK 风格前端扩展。插件以本地内联 SVG 和随包附带的银行卡卡面素材绘制界面，不依赖第三方图片服务或远程字体。
 
-## 本版更新 0.9.0
+## 本版更新 1.0.0
 
-- Home 与导航栏分隔线改为居中的 22px 细线；首页欢迎卡只保留 HSBC Bank A/C 信息，日期按本地时钟生成，并可展开最近聊天记录。
-- 最近聊天通过 SillyTavern 聊天搜索接口读取当前角色或群组历史，点选后交由酒馆原生聊天加载方法切换。
-- Cards 页面支持全部 User Personas、称谓选择、Swipe/List 模式、四组遮罩卡号点、自定义上传和本地 HSBC 卡面图库；图库卡面采用银行卡比例、圆角裁切，图片原始黑色角不会显示。
-- 新增 11 张用户提供的 HSBC 卡面到 `assets/cards/`，可从卡面选择器的 HSBC card gallery 中选用；所有卡面资源离线随插件分发。
-- Character 列表增加收藏过滤、搜索、原生排序/导入/创建入口和整洁的角色行；角色点击仍调用酒馆原生事件。
-- 人设管理、Presets、API、Extensions、World Info、背景、高级格式化和用户设置维持原生控件及存储事件，并统一使用高对比 HSBC 表单和分组卡片样式。
-- 修复关闭子页面时原生抽屉没有收起的问题；编辑人设备注时不再重绘输入区，确保连续输入。
-- Library 的快捷入口、三列功能区、滚动内容和固定底部版本/Log off 均按 HSBC 风格整理。
+- The Home header and inset divider match the reference; the HSBC Bank A/C card is the only welcome entry.
+- The native SillyTavern welcome panel is hidden. Bank A/C loads chat history for all characters and opens the selected chat through SillyTavern native APIs.
+- Cards supports all personas, honorifics, Swipe/List modes, upload-first skin selection, custom images, and offline artwork without printed account digits.
+- The Standard Debit image has been retouched to remove its printed card number; supplied card corners remain clipped by the rounded card viewport.
+- Persona management keeps a two-column action grid and adds the saved Chinese Subtitles toggle.
+- Mounted pages use centered HSBC white cards, inset dividers, high-contrast labels, custom ranges, and red checkboxes.
+- The true four-triangle HSBC emblem replaces the hollow ring on the Bank A/C card and AI message avatars.
 
 ## 安装
 
@@ -44,3 +43,7 @@
 ## 停用
 
 在第三方扩展管理器中关闭扩展并重新加载页面即可还原酒馆原生界面和自定义 CSS 状态。
+- Replaced the hollow hexagon with the four-triangle HSBC emblem and hid the native SillyTavern welcome panel. The Bank A/C card is the welcome entry.
+- Bank A/C loads recent chats for every character and sorts them by their latest message; selecting one uses SillyTavern native character and chat switching.
+- Added a card-skin picker with upload first, a bilingual Persona actions toggle, and centered grouped HSBC controls across mounted pages.
+- Added a card-skin picker with upload first, a bilingual Persona actions toggle, and centered grouped HSBC controls across mounted pages.
