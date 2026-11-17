@@ -2,9 +2,9 @@
 
 An offline, third-party SillyTavern UI extension inspired by the supplied HSBC UK mobile app screenshots. It adds a compact banking-style navigation, three chat shortcut pages, a responsive message composer and a right-side Library drawer. Icons and illustrations are inline SVG; no remote images, fonts, or runtime services are required.
 
-## Update 0.2.0
+## Update 0.3.0
 
-The first test update adds a desktop-width layout, removes the duplicate Home tab and extra Pay/Cards tab icons, and strengthens the HSBC skin rules so host themes and custom CSS do not show through the main chat surface.
+This update fixes narrow-screen message overflow and the Library drawer stacking order, reapplies the HSBC stylesheet after SillyTavern custom CSS, normalizes message and composer typography, and adds a short offline vector splash inspired by the supplied mobile welcome screen. The splash is a visual transition only and does not simulate banking authentication.
 
 ## Install for local testing
 
