@@ -2,7 +2,7 @@
 
 为 SillyTavern 提供独立全屏的 HSBC UK 风格前端扩展。插件以本地内联 SVG 和随包附带的银行卡卡面素材绘制界面，不依赖第三方图片服务或远程字体。
 
-## 本版更新 1.0.0
+## 本版更新 1.0.1
 
 - The Home header and inset divider match the reference; the HSBC Bank A/C card is the only welcome entry.
 - The native SillyTavern welcome panel is hidden. Bank A/C loads chat history for all characters and opens the selected chat through SillyTavern native APIs.
