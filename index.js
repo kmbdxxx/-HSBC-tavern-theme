@@ -50,10 +50,12 @@ function makeButton(label, icon, handler, cls = '') {
   const b = create('button', `hsbc-action ${cls}`, `${icon}<span>${label}</span>`); b.type = 'button'; b.addEventListener('click', handler); return b;
 }
 function makeNavigation() {
-  const bar = create('nav', 'hsbc-nav', `<div class="hsbc-nav-brand">${icons.home}<i></i></div>`);
+  const bar = create('nav', 'hsbc-nav');
   bar.setAttribute('aria-label', 'Main navigation');
-  [['Home', 'home'], ['Pay', 'pay'], ['Cards', 'cards'], ['Save & Invest', 'save']].forEach(([label, key]) => {
-    bar.appendChild(makeButton(label, icons[key], () => key === 'cards' ? openCards() : actions[key](), key === 'home' ? 'is-active' : ''));
+  const home = create('button', 'hsbc-nav-brand', `${icons.home}<i></i>`);
+  home.type = 'button'; home.setAttribute('aria-label', 'Home · Presets'); home.title = 'Home · Presets'; home.addEventListener('click', actions.home); bar.appendChild(home);
+  [['Pay', 'pay'], ['Cards', 'cards'], ['Save & Invest', 'save']].forEach(([label, key]) => {
+    bar.appendChild(makeButton(label, '', () => key === 'cards' ? openCards() : actions[key]()));
   });
   const library = create('button', 'hsbc-nav-menu', icons.menu); library.type = 'button'; library.setAttribute('aria-label', 'Open Library'); library.addEventListener('click', openLibrary); bar.appendChild(library);
   return bar;
