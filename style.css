@@ -160,6 +160,111 @@ body.hsbc-tavern :is(input,select,textarea,.text_pole) {
 .hsbc-nav .hsbc-action:after { display:none; }
 .hsbc-nav-menu { margin-left:auto; }
 .hsbc-persona-card { background-image:linear-gradient(125deg,#3b444b,#899198 48%,#d2d5d7)!important; }
+.hsbc-library-host { z-index:2147483000!important; isolation:isolate!important; }
+.hsbc-library-shade { position:fixed!important; z-index:0!important; inset:0!important; background:rgba(20,27,32,.42)!important; }
+.hsbc-library {
+  position:fixed!important; z-index:1!important; top:0!important; right:0!important; bottom:0!important; left:auto!important;
+  width:min(440px,calc(100vw - 20px))!important; height:100dvh!important; max-height:100dvh!important;
+  background:#fff!important; background-image:none!important; opacity:1!important; visibility:visible!important;
+}
+.hsbc-library-head,.hsbc-library-content,.hsbc-library-footer { position:relative!important; z-index:2!important; flex-shrink:0!important; background:#fff!important; }
+.hsbc-library-content { flex:1 1 auto!important; min-height:0!important; overflow-x:hidden!important; overflow-y:auto!important; }
+body.hsbc-library-open { overflow:hidden!important; }
+body.hsbc-tavern #sheld {
+  position:absolute!important; top:0!important; left:0!important; right:0!important;
+  width:100vw!important; width:100dvw!important; min-width:0!important; max-width:none!important;
+  height:100vh!important; height:100dvh!important; max-height:100vh!important; max-height:100dvh!important;
+  margin:0!important; padding-top:62px!important; box-sizing:border-box!important;
+}
+body.hsbc-tavern #top-settings-holder { position:relative!important; z-index:40!important; width:100%!important; max-width:none!important; }
+body.hsbc-tavern #chat .mes {
+  display:flex!important; align-items:flex-start!important; gap:10px!important;
+  width:100%!important; max-width:100%!important; min-width:0!important; box-sizing:border-box!important;
+  margin:12px 0!important; padding:0 12px!important; overflow:visible!important;
+  background:transparent!important; background-image:none!important; border:0!important; box-shadow:none!important;
+}
+body.hsbc-tavern #chat .mes .mes_block { flex:1 1 0!important; width:auto!important; min-width:0!important; max-width:100%!important; }
+body.hsbc-tavern #chat .mes .mes_header { display:flex!important; align-items:center!important; gap:8px!important; margin:0 0 6px!important; padding:0!important; }
+body.hsbc-tavern #chat .mes .mes_header *,
+body.hsbc-tavern #chat .mes .mes_text *,
+body.hsbc-tavern #chat .mes .mesid {
+  font-family:Arial,"Noto Sans",sans-serif!important; font-style:normal!important;
+  text-shadow:none!important; letter-spacing:normal!important;
+}
+body.hsbc-tavern #chat .mes .mes_header *,body.hsbc-tavern #chat .mes .mesid { font-size:14px!important; }
+body.hsbc-tavern #chat .mes .ch_name { font-size:16px!important; font-weight:600!important; color:#333e48!important; }
+body.hsbc-tavern #chat .mes .mes_text,
+body.hsbc-tavern #chat .mes .mes_text *:not(i):not(.fa-solid):not(.fa-regular) {
+  font-family:Arial,"Noto Sans",sans-serif!important; font-size:16px!important;
+  line-height:1.55!important; font-style:normal!important; text-shadow:none!important;
+  letter-spacing:normal!important; white-space:normal!important; overflow-wrap:anywhere!important; word-break:normal!important;
+}
+body.hsbc-tavern #chat .mes .mes_text {
+  display:block!important; width:100%!important; max-width:100%!important; min-width:0!important;
+  box-sizing:border-box!important; margin:0!important; padding:14px 16px!important;
+  color:#222!important; background:#fff!important; background-image:none!important;
+  border:1px solid #e4e6e9!important; border-radius:4px 16px 16px 16px!important;
+  box-shadow:none!important; overflow:hidden!important;
+}
+body.hsbc-tavern #chat .mes[is_user="true"] .mes_text { background:#e9edf0!important; border-radius:16px 4px 16px 16px!important; }
+body.hsbc-tavern #chat .mes[is_user="true"] { justify-content:flex-end!important; }
+body.hsbc-tavern #chat .mes[is_system="true"] { display:none!important; }
+body.hsbc-tavern #chat .mes .mes_text :is(button,.menu_button,.quick-reply):not(.fa-solid) {
+  color:#333e48!important; background:#fff!important; border:1px solid #dfe3e6!important;
+  border-radius:18px!important; box-shadow:none!important; text-shadow:none!important;
+}
+body.hsbc-tavern #send_form,
+body.hsbc-tavern #nonQRFormItems,
+body.hsbc-tavern #leftSendForm,
+body.hsbc-tavern #rightSendForm { background:#fff!important; background-image:none!important; box-shadow:none!important; }
+body.hsbc-tavern #send_form { width:100%!important; box-sizing:border-box!important; border:0!important; border-top:1px solid #e4e6e9!important; border-radius:0!important; }
+body.hsbc-tavern #nonQRFormItems { width:100%!important; min-width:0!important; align-items:center!important; }
+body.hsbc-tavern #leftSendForm,body.hsbc-tavern #rightSendForm { flex:0 0 40px!important; width:40px!important; min-width:40px!important; }
+body.hsbc-tavern #send_textarea {
+  flex:1 1 auto!important; width:1%!important; min-width:0!important; max-width:none!important; min-height:44px!important;
+  font-family:Arial,"Noto Sans",sans-serif!important; font-size:16px!important; line-height:1.4!important; color:#222!important;
+  background:#fff!important; border:1px solid #b8c0c6!important; border-radius:8px!important; box-shadow:none!important;
+}
+body.hsbc-tavern #send_textarea::placeholder { color:#7c858c!important; font-family:Arial,"Noto Sans",sans-serif!important; font-style:normal!important; opacity:1!important; }
+body.hsbc-tavern #send_form :is(button,.menu_button,#options_button,#send_but) { font-family:Arial,"Noto Sans",sans-serif!important; text-shadow:none!important; box-shadow:none!important; }
+body.hsbc-tavern #leftSendForm::before,body.hsbc-tavern #leftSendForm::after,
+body.hsbc-tavern #rightSendForm::before,body.hsbc-tavern #rightSendForm::after { content:none!important; display:none!important; }
+body.hsbc-tavern #send_but { background:#db0011!important; border:0!important; color:#fff!important; }
+body.hsbc-tavern #send_but::before { content:"➜"!important; display:block!important; color:#fff!important; font-family:Arial,sans-serif!important; font-size:21px!important; }
+.hsbc-splash {
+  position:fixed; z-index:2147483600; inset:0; display:grid; grid-template-rows:minmax(0,1.1fr) minmax(280px,.9fr);
+  overflow:hidden; background:#fff; color:#222; opacity:1; animation:hsbc-splash-in .5s ease-out both;
+}
+.hsbc-splash.is-leaving { pointer-events:none; animation:hsbc-splash-out .45s ease-in both; }
+.hsbc-splash-scene { min-height:0; overflow:hidden; background:#e6d7d8; }
+.hsbc-splash-scene svg { display:block; width:100%; height:100%; object-fit:cover; animation:hsbc-scene-drift 2.7s ease-out both; }
+.hsbc-splash-copy { display:flex; flex-direction:column; align-items:flex-start; gap:7px; width:min(100%,520px); box-sizing:border-box; margin:auto; padding:24px 26px max(28px,env(safe-area-inset-bottom)); }
+.hsbc-splash-brand { display:flex; align-items:center; gap:8px; color:#333e48; font-size:14px; letter-spacing:.08em; }
+.hsbc-splash-brand i { width:20px; height:16px; background:linear-gradient(30deg,#db0011 0 47%,#fff 48% 52%,#db0011 53%); display:block; }
+.hsbc-splash-greeting { margin:18px 0 0; color:#69737c; font-size:16px; }
+.hsbc-splash-copy h1 { margin:0; color:#222; font-size:clamp(28px,7vw,38px); font-weight:400; }
+.hsbc-splash-subtitle { margin:0 0 13px; color:#69737c; font-size:14px; }
+.hsbc-splash-enter { display:flex; align-items:center; justify-content:space-between; width:100%; min-height:50px; padding:0 16px; border:0; border-radius:2px; background:#db0011; color:#fff; font-size:16px; text-align:left; }
+.hsbc-splash-enter span { font-size:22px; }
+.hsbc-splash-copy small { margin:13px auto 0; color:#92999e; font-size:9px; letter-spacing:.12em; }
+@keyframes hsbc-splash-in { from { opacity:0; } to { opacity:1; } }
+@keyframes hsbc-splash-out { to { opacity:0; visibility:hidden; } }
+@keyframes hsbc-scene-drift { from { transform:scale(1.06); } to { transform:scale(1); } }
+@media (min-width:760px) {
+  .hsbc-splash { grid-template-columns:minmax(0,1.2fr) minmax(360px,.8fr); grid-template-rows:1fr; }
+  .hsbc-splash-copy { padding:48px clamp(32px,6vw,90px); }
+  .hsbc-splash-scene svg { height:100%; }
+}
+@media (max-width:520px) {
+  body.hsbc-tavern #sheld { padding-top:56px!important; }
+  .hsbc-library { width:calc(100vw - 18px)!important; }
+  .hsbc-splash { grid-template-rows:minmax(0,1.05fr) minmax(290px,.95fr); }
+  .hsbc-splash-copy { padding:20px 22px max(25px,env(safe-area-inset-bottom)); }
+}
+@media (prefers-reduced-motion:reduce) {
+  .hsbc-splash,.hsbc-splash-scene svg { animation-duration:.01ms!important; }
+  .hsbc-splash { transition:none!important; }
+}
 @media (max-width:520px) {
   .hsbc-nav { height:56px; }
   body.hsbc-tavern #sheld,body.hsbc-tavern #top-settings-holder { padding-top:56px!important; }
