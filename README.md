@@ -2,6 +2,13 @@
 
 面向 SillyTavern 的离线第三方前端扩展。项目独立存放在 `hsbc-tavern` 文件夹，可从 GitHub 安装和更新。界面参考项目提供的 HSBC UK 手机端图片；图标、品牌标识和抽屉插画均由内联 SVG 绘制，不加载外部图片或字体。
 
+## 0.7.0
+
+- 保留 Font Awesome 原生图标字体，修复 API、扩展与世界书子页中的叉号方框；重设原生抽屉标题和表单为 HSBC 白灰卡片。
+- 底部输入栏只保留 SVG 图标，工具菜单支持第 1 页排序、收藏即时红星反馈和第 3 页垃圾桶移除。
+- Bank A/C 顶卡显示酒馆版本并可关闭；Cards 页面从酒馆上下文和人设列表合并读取所有 persona，支持标准、Prime、Global 和上传卡面。
+- 开屏改为清晰的红白几何 SVG，可在 Extensions 中上传或重置自定义开屏图。
+
 ## 0.6.1
 
 - 在 index.js 内嵌 HSBC CSS，并在 head 末尾创建 #hsbc-master-style；head 观察器仅在该样式不为最后元素时移动它。
