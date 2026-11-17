@@ -11,7 +11,7 @@ const I = {
   menu: svg('<path d="M3 6h18M3 12h18M3 18h18"/>'), close: svg('<path d="m6 6 12 12M18 6 6 18"/>'),
   person: svg('<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'), bell: svg('<path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/>'),
   chat: svg('<path d="M4 4h16v13H9l-5 4zM8 8h8M8 12h6"/>'), left: svg('<path d="m15 18-6-6 6-6"/>'), right: svg('<path d="m9 18 6-6-6-6"/>'),
-  arrow: svg('<path d="M4 12h15m-6-6 6 6-6 6"/>'), wallet: svg('<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 8h15m-4 6h5"/><circle cx="16" cy="14" r=".6"/>'),
+  arrow: svg('<path d="M4 12h15m-6-6 6 6-6 6"/>'), star: svg('<path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>'), wallet: svg('<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 8h15m-4 6h5"/><circle cx="16" cy="14" r=".6"/>'),
   chart: svg('<path d="M12 3a9 9 0 1 0 9 9h-9z"/><path d="M14 3v7h7"/><circle cx="8" cy="15" r="1"/>'), umbrella: svg('<path d="M3 12a9 9 0 0 1 18 0zM12 12v7a2 2 0 0 0 4 0"/>'),
   shield: svg('<path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11z"/><path d="m9 12 2 2 4-4"/>'), card: svg('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/>'),
 };
@@ -65,13 +65,13 @@ function renderMenu() {
   items.forEach(item => {
     const row = el('div', 'hsbc-tool-row'); row.dataset.key = item.key; row.dataset.kind = item.kind;
     const open = button(item.label, '', () => { item.node.click(); closeTools(); }, 'hsbc-tool-open');
-    const copy = button(menuPage === 2 ? 'Remove' : '☆', '', () => {
+    const copy = button(menuPage === 2 ? 'Remove' : 'Copy', menuPage === 2 ? '' : I.star, () => {
       if (menuPage === 2) state.custom = state.custom.filter(c => !(c.kind === item.kind && c.key === item.key));
       else if (!state.custom.some(c => c.kind === item.kind && c.key === item.key)) state.custom.push({ kind: item.kind, key: item.key });
       persist(); renderMenu();
-    }, 'hsbc-tool-copy'); copy.setAttribute('aria-label', menuPage === 2 ? 'Remove shortcut' : 'Copy to shortcuts');
+    }, 'hsbc-tool-copy'); if (menuPage !== 2) copy.querySelector('.hsbc-label').textContent = ''; copy.setAttribute('aria-label', menuPage === 2 ? 'Remove shortcut' : 'Copy to shortcuts');
     row.append(open, copy);
-    if (menuPage > 0) { const handle = el('button', 'hsbc-drag-handle', '☰'); handle.type = 'button'; handle.title = 'Hold and drag to reorder'; handle.setAttribute('aria-label', 'Drag to reorder'); row.append(handle); attachReorder(handle, row, menuPage === 1 ? 'extensions' : 'custom'); }
+    if (menuPage > 0) { const handle = el('button', 'hsbc-drag-handle', I.menu); handle.type = 'button'; handle.title = 'Hold and drag to reorder'; handle.setAttribute('aria-label', 'Drag to reorder'); row.append(handle); attachReorder(handle, row, menuPage === 1 ? 'extensions' : 'custom'); }
     list.append(row);
   });
   box.querySelectorAll('[data-page]').forEach(b => b.setAttribute('aria-current', String(Number(b.dataset.page) === menuPage)));
@@ -132,7 +132,7 @@ function paintCards() {
     if (carousel && index !== state.cardIndex) return;
     const id = persona.dataset.avatarId; const name = persona.querySelector('.ch_name')?.textContent?.trim() || id;
     const card = el('article', `hsbc-persona-card ${carousel ? 'is-carousel' : 'is-row'}`); card.style.setProperty('--card-art', state.cards[id] || cardArtwork(index, name));
-    card.innerHTML = `<div class="hsbc-card-brand">HSBC <span>${/premier|prime/i.test(name) ? 'PREMIER' : /global|money/i.test(name) ? 'GLOBAL MONEY' : 'DEBIT'}</span></div><div class="hsbc-card-center"><span class="hsbc-card-mark">◆</span><strong></strong><small>USER PERSONA · ${safeText(id)}</small></div><div class="hsbc-card-foot"><span>•••• &nbsp; •••• &nbsp; ••••</span><span>VISA</span></div>`;
+    card.innerHTML = `<div class="hsbc-card-brand">HSBC <span>${/premier|prime/i.test(name) ? 'PREMIER' : /global|money/i.test(name) ? 'GLOBAL MONEY' : 'DEBIT'}</span></div><div class="hsbc-card-center"><span class="hsbc-card-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#db0011" d="m12 1 10 5.7v10.6L12 23 2 17.3V6.7z"/><path fill="#fff" d="m12 5 6 3.4v7.2L12 19l-6-3.4V8.4z"/></svg></span><strong></strong><small>USER PERSONA · ${safeText(id)}</small></div><div class="hsbc-card-foot"><span>•••• &nbsp; •••• &nbsp; ••••</span><span>VISA</span></div>`;
     card.querySelector('.hsbc-card-center strong').textContent = name;
     card.addEventListener('click', e => { if (e.target.closest('.hsbc-card-upload-button')) return; persona.click(); document.querySelectorAll('.hsbc-persona-card').forEach(x => x.classList.remove('is-selected')); card.classList.add('is-selected'); });
     const file = document.createElement('input'); file.type = 'file'; file.accept = 'image/*'; file.className = 'hsbc-card-file'; file.addEventListener('change', () => {
