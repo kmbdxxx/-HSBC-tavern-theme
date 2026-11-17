@@ -734,4 +734,8 @@ body.hsbc-ui-mounted #dialogue_popup_ok,body.hsbc-ui-mounted #completion_prompt_
 .hsbc-persona-action-grid>button::before{display:none!important;content:none!important;}
 .hsbc-persona-action-grid .hsbc-action-arrow{display:grid!important;place-items:center!important;flex:0 0 24px!important;width:24px!important;height:24px!important;margin-left:auto!important;color:#68737B!important;}
 .hsbc-persona-action-grid .hsbc-action-arrow svg{display:block!important;width:18px!important;height:18px!important;}
+#hsbc-loading-screen{pointer-events:none!important;}
+#hsbc-splash-screen.hsbc-splash{z-index:200002!important;pointer-events:auto!important;}
+#hsbc-splash-screen .hsbc-splash-content button{position:relative!important;z-index:1!important;pointer-events:auto!important;touch-action:manipulation!important;cursor:pointer!important;}
+#hsbc-splash-screen.hsbc-splash.is-leaving{pointer-events:none!important;}
 @media(max-width:600px){#hsbc-cards-page{padding:14px 8px 24px!important}.hsbc-card-carousel{gap:2px!important}.hsbc-card-carousel>.hsbc-card-prev,.hsbc-card-carousel>.hsbc-card-next{flex-basis:28px!important;width:28px!important}.hsbc-card-settings{grid-template-columns:1fr!important}.hsbc-card-settings>#hsbc-card-skin-trigger{grid-column:1!important;grid-row:auto!important}.hsbc-persona-action-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
