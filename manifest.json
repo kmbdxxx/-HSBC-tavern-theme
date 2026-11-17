@@ -1,12 +1,11 @@
 {
-  "display_name": "测试",
+  "display_name": "HSBC Welcome",
   "loading_order": 90,
   "requires": [],
   "optional": [],
   "js": "index.js",
-  "css": "style.css",
   "author": "kmbdxxx",
-  "version": "1.0.4",
-  "description": "HSBC UK SillyTavern interface with resilient native subpages, responsive splash controls, and privacy-safe account styling.",
+  "version": "2.0.1",
+  "description": "A safe HSBC-inspired welcome view that leaves SillyTavern's native interface untouched.",
   "homePage": "https://github.com/kmbdxxx/tavern-test"
 }
