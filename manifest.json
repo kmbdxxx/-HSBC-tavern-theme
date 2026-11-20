@@ -1,11 +1,12 @@
 {
-  "display_name": "HSBC Welcome",
-  "loading_order": 110,
+  "display_name": "HSBC Tavern Theme",
+  "loading_order": 90,
   "requires": [],
   "optional": [],
   "js": "index.js",
   "css": "style.css",
   "author": "kmbdxxx",
-  "version": "2.1.1",
-  "description": "The complete HSBC internal theme with the current safe welcome view."
+  "version": "1.1.0",
+  "description": "Unofficial HSBC-UK-mobile-app-inspired skin for SillyTavern (fan-made theme, not affiliated with HSBC).",
+  "homePage": "https://github.com/kmbdxxx/hsbc-tavern-theme"
 }

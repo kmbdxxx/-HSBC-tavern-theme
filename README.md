@@ -1,36 +1,52 @@
-# HSBC UK Tavern Skin
+# HSBC Tavern Theme
 
-A SillyTavern third-party extension that places an HSBC UK inspired interface shell over SillyTavern while preserving its native chat, settings, persona, character, prompt, API, world info, and extension controls.
+An unofficial, HSBC-UK-mobile-app-inspired skin for [SillyTavern](https://github.com/SillyTavern/SillyTavern).
+It wraps SillyTavern in a banking-app style shell while keeping every native SillyTavern feature reachable.
 
-## Release 1.0.4
+> **Disclaimer**
+> Unofficial fan-made theme for SillyTavern. Not affiliated with, endorsed by, or connected to HSBC Holdings plc or any HSBC group company.
+> HSBC and the hexagon logo are trademarks of their owners; no commercial use.
 
-- Fixed splash controls that could appear responsive visually while an invisible loading layer intercepted taps. The loader now never captures pointer events, and splash buttons use a capture-phase close fallback.
+## Features
 
-## Release 1.0.3
+- Banking-app shell: header tabs (Home / Pay / Cards / Save & Invest), Library drawer, welcome screen, account tile with recent chats.
+- SillyTavern pages restyled in one flat look: Presets, API connections, Characters (list and editor), World Info, Extensions,
+  Backgrounds, Advanced formatting, User settings, popups and toasts.
+- Mobile layout (tested at 360-392 px wide) and desktop layout.
+- Quick Reply drawer: a thin handle on the line above the input bar; the Quick Reply buttons of all extensions flow in one wrapping row.
+  Can be switched to a plain always-visible strip.
+- Language option for the theme's own texts: English, 简体中文, 繁體中文, 粵語.
+- Welcome card image: choose your own picture for the welcome screen (stored in the extension settings), reset to default any time.
 
-- Restored the Cards page by rendering its controls before attaching event handlers.
-- Added guarded page renderers and explicit visibility recovery for native panels moved into the shell.
-- Kept prompt editing dialogs above the shell and restyled the prompt list as one grouped surface.
-- Added a crisp white HSBC first-paint loader and removed the legacy example account amount.
-- Hid the idle API welcome tip and refined the account card, User Settings, World Info, Characters, and Extensions layouts.
+All options live in **Extensions → HSBC UK Theme Settings**.
 
 ## Install
 
-In SillyTavern, open Extensions, choose Install extension, and enter:
+- SillyTavern → **Extensions** → **Install extension** → paste this repository's URL, or
+- copy this folder to `SillyTavern/public/scripts/extensions/third-party/`.
 
-`https://github.com/kmbdxxx/tavern-test`
+Reload SillyTavern afterwards.
 
-For local testing, place this project folder in SillyTavern's `public/scripts/extensions/third-party/` directory. The standalone project remains usable as a local import package.
+Updating from an older copy installed under a different folder name (for example `tavern-test`): disable or remove the old folder first,
+so that only one copy of the theme is loaded. Your theme preferences are kept (they are stored by key, not by folder name).
 
-## Files
+## Tested with
 
-- `manifest.json` - SillyTavern extension metadata.
-- `index.js` - shell, native panel bridges, page rendering, and inline SVG icons.
-- `style.css` - the HSBC UK visual system; the same stylesheet is embedded in `index.js` to reduce stale mobile CSS.
-- `assets/cards/` - offline card artwork supplied for the persona card selector.
+SillyTavern 1.19.0 (desktop browser and mobile browser).
 
-## Compatibility notes
+## Disable / uninstall
 
-The extension moves existing SillyTavern panels into its subpage host and restores them when navigating away. It does not replace SillyTavern's underlying data storage. The displayed account amount is a local visual preference and starts at a generic zero value.
+- Disable: Extensions → Manage extensions → switch the theme off, then reload. SillyTavern's own interface comes back unchanged.
+- Uninstall: delete the extension in Manage extensions (or remove its folder from `public/scripts/extensions/third-party/`) and reload.
 
-Disable the extension from SillyTavern's Extensions panel to restore the native interface.
+The theme does not modify SillyTavern's files. While it is active it hides your Custom CSS theme; it is restored when the theme is off.
+
+## Known limitations
+
+- Other extensions' own windows and widgets keep their own look; some may appear different inside the theme.
+- The theme's language option translates only the theme's own texts, not SillyTavern's interface.
+- Developer debug panel: off by default; it only appears when `localStorage` key `hsbc-tavern.debug` is set to `1`.
+
+## License
+
+MIT - see [LICENSE](LICENSE).
