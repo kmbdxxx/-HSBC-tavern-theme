@@ -3104,3 +3104,28 @@ html.hsbc-skin-on:not(.hsbc-qr-drawer-off) #hsbc-uk-app:not(#hsbc-m):not(#hsbc-n
 }
 /* Item C: World Info entry toggle = thin red chevron (no circle / background / border), 36px tap area; colour #DB0011 */
 html.hsbc-skin-on #hsbc-uk-app:not(#hsbc-m):not(#hsbc-n) #hsbc-native-host>#WorldInfo #world_popup_entries_list .world_entry .inline-drawer-header .inline-drawer-toggle.inline-drawer-icon{min-width:36px!important;color:#DB0011!important;background:none!important;border:0!important;box-shadow:none!important}
+/* 1.0.40b stop button (desktop + phone): while SillyTavern generates, the send arrow becomes a centred stop icon (red disc, white hollow
+   square) with a slim rotating ring; static with prefers-reduced-motion. Same slot and hit area as the send button; nothing else changes. */
+#hsbc-uk-app:not(#hsbc-m):not(#hsbc-n) #hsbc-footer>.hsbc-send{display:flex!important;align-items:center!important;justify-content:center!important;overflow:visible!important}
+#hsbc-uk-app:not(#hsbc-m):not(#hsbc-n) #hsbc-footer>.hsbc-send>.hsbc-stop-icon{display:none!important}
+#hsbc-uk-app:not(#hsbc-m):not(#hsbc-n) #hsbc-footer>.hsbc-send.is-stop>svg:not(.hsbc-stop-icon){display:none!important}
+#hsbc-uk-app:not(#hsbc-m):not(#hsbc-n) #hsbc-footer>.hsbc-send.is-stop>.hsbc-stop-icon{display:block!important;flex:none!important;width:40px!important;height:40px!important;margin:0!important;overflow:visible!important}
+#hsbc-uk-app:not(#hsbc-m):not(#hsbc-n) #hsbc-footer>.hsbc-send.is-stop>.hsbc-stop-icon .hsbc-stop-spin{transform-box:view-box!important;transform-origin:20px 20px!important;animation:hsbc-stop-spin 1.4s linear infinite!important}
+@keyframes hsbc-stop-spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce) {
+  #hsbc-uk-app:not(#hsbc-m):not(#hsbc-n) #hsbc-footer>.hsbc-send.is-stop>.hsbc-stop-icon .hsbc-stop-spin{animation:none!important}
+}
+@media (max-width: 640px) {
+  /* phone: the send slot is 34px wide - the stop icon is scaled to fit it exactly (symmetric viewBox keeps it centred) */
+  #hsbc-uk-app:not(#hsbc-m):not(#hsbc-n) #hsbc-footer>.hsbc-send.is-stop>.hsbc-stop-icon{width:34px!important;height:34px!important}
+}
+/* 1.0.40b: smaller stop icon (user feedback: the red disc was too big) - desktop 30px, phone 28px, still centred in the same slot */
+#hsbc-uk-app:not(#hsbc-m):not(#hsbc-n) #hsbc-footer>.hsbc-send.is-stop>.hsbc-stop-icon{width:30px!important;height:30px!important}
+@media (max-width: 640px) {
+  #hsbc-uk-app:not(#hsbc-m):not(#hsbc-n) #hsbc-footer>.hsbc-send.is-stop>.hsbc-stop-icon{width:28px!important;height:28px!important}
+}
+/* 1.0.40c — 2026-11-20: Chinese Subtitles OFF = English only (an older rule forced the Personas subtitles to display:block always) */
+#hsbc-uk-app:not(#hsbc-m):not(#hsbc-n) #hsbc-cards-page:not(.is-bilingual) .hsbc-persona-action-grid > button > .hsbc-action-label > small,
+#hsbc-uk-app:not(#hsbc-m):not(#hsbc-n) #hsbc-cards-page:not(.is-bilingual) .hsbc-action-label > small{display:none!important}
+#hsbc-uk-app:not(#hsbc-m):not(#hsbc-n) #hsbc-cards-page.is-bilingual .hsbc-persona-action-grid > button > .hsbc-action-label > small{display:block!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+#hsbc-native-host>#rm_extensions_block .hsbc-theme-settings .hsbc-theme-help{display:block!important;margin-top:4px!important;color:#767676!important;font-size:12px!important;line-height:1.35!important;font-weight:400!important}

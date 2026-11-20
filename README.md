@@ -1,5 +1,7 @@
 # HSBC Tavern Theme
 
+Repository: https://github.com/kmbdxxx/-HSBC-tavern-theme
+
 An unofficial, HSBC-UK-mobile-app-inspired skin for [SillyTavern](https://github.com/SillyTavern/SillyTavern).
 It wraps SillyTavern in a banking-app style shell while keeping every native SillyTavern feature reachable.
 
@@ -16,6 +18,8 @@ It wraps SillyTavern in a banking-app style shell while keeping every native Sil
 - Quick Reply drawer: a thin handle on the line above the input bar; the Quick Reply buttons of all extensions flow in one wrapping row.
   Can be switched to a plain always-visible strip.
 - Language option for the theme's own texts: English, 简体中文, 繁體中文, 粵語.
+- Stop button: while SillyTavern is generating, the send arrow turns into a stop button (forwards to SillyTavern's own stop).
+- Chinese Subtitles (Personas page): optional Chinese line under each action, in Simplified, Traditional or Cantonese wording to match the theme language. Off by default.
 - Welcome card image: choose your own picture for the welcome screen (stored in the extension settings), reset to default any time.
 
 All options live in **Extensions → HSBC UK Theme Settings**.
@@ -44,7 +48,7 @@ The theme does not modify SillyTavern's files. While it is active it hides your 
 ## Known limitations
 
 - Other extensions' own windows and widgets keep their own look; some may appear different inside the theme.
-- The theme's language option translates only the theme's own texts, not SillyTavern's interface.
+- The theme's language option translates only the theme's own texts, never SillyTavern's interface (set that in User Settings → Language).
 - Developer debug panel: off by default; it only appears when `localStorage` key `hsbc-tavern.debug` is set to `1`.
 
 ## License
