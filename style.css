@@ -3374,3 +3374,7 @@ html.hsbc-skin-on #hsbc-uk-app #hsbc-native-host>#rm_extensions_block #regex_con
    measures the drawer with getBoundingClientRect). Script rows are 56px fixed-height (1.0.44a), so off-screen rows can skip layout:
    content-visibility:auto + a 56px intrinsic size (identical geometry; measured 967 -> ~395 ms at CPU x4). */
 html.hsbc-skin-on #hsbc-uk-app #hsbc-native-host>#rm_extensions_block #regex_container .regex_settings>.inline-drawer>.inline-drawer-content .regex-script-label{content-visibility:auto;contain-intrinsic-size:auto 56px}
+
+/* 1.0.48 — 2026-11-20 */
+/* debug panel only: 'Colour probe' button styled like the hide/show toggle */
+#hsbc-uk-app #hsbc-debug-panel>.hsbc-debug-head>.hsbc-debug-probe{min-width:44px!important;height:28px!important;margin:0 8px 0 auto!important;padding:0 8px!important;border:1px solid #D7D8D6!important;border-radius:0!important;background:#fff!important;color:#DB0011!important}
