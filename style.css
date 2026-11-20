@@ -3422,3 +3422,6 @@ html.hsbc-skin-on #hsbc-uk-app #hsbc-native-host>#left-nav-panel #completion_pro
    --shadowWidth 5 with a black shadow (other themes 0-2, hence 'sometimes'). The skin is flat: zero the width while the skin is on
    (beats ST's inline --shadowWidth on <html>; the user's theme setting itself is not changed). */
 html.hsbc-skin-on{--shadowWidth:0!important}
+/* 1.0.50 b: JS-Slash-Runner (酒馆助手) opens its editors / import / built-in library as div.TH-popup on <body> (z-index 10000), i.e. UNDER
+   the skin shell (z 300002) - the buttons seemed dead. Lift them like ST's teleported dialogs (1.0.31). */
+body.hsbc-ui-mounted>.TH-popup,body.hsbc-ui-mounted #movingDivs>.TH-popup{z-index:300004!important}

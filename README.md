@@ -33,6 +33,7 @@ It wraps SillyTavern in a banking-app style shell while keeping every native Sil
 - Extensions > Regex opens faster: off-screen script rows skip layout (same look).
 - Regex/ticket blocks that copy the message colour now get the skin ink (the hidden message template uses it). Desktop Presets: Multi-select and Remove selected buttons (removes prompts from the current list like the single remove icon).
 - No blurred text: the UI theme text shadow is switched off while the skin is on (also in other extensions' panels and toasts).
+- JS-Slash-Runner (Tavern Helper) windows (new script / folder, import, built-in library) open above the skin instead of underneath it.
 - Welcome card image: choose your own picture for the welcome screen (stored in the extension settings), reset to default any time.
 
 All options live in **Extensions → HSBC UK Theme Settings**.
