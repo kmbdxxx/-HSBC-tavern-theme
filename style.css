@@ -3415,3 +3415,10 @@ html.hsbc-skin-on #hsbc-uk-app #hsbc-native-host>#left-nav-panel #completion_pro
   /* count badge inside the button corner (the head row clips overflow) */
   html.hsbc-skin-on #hsbc-uk-app #hsbc-native-host>#left-nav-panel #completion_prompt_manager .hsbc-ms-delete>.hsbc-ms-badge{top:1px!important;right:1px!important;min-width:13px!important;height:13px!important;padding:0 3px!important;border-radius:7px!important;font-size:10px!important;line-height:13px!important}
 }
+
+/* 1.0.50 — 2026-11-20 */
+/* Blurred text in overlays outside the shell (ST Dual Sync panel, toasts, tide console, popups): SillyTavern draws
+   text-shadow: 0 0 calc(var(--shadowWidth)*1px) var(--SmartThemeShadowColor) on body and several elements; the user's UI theme sets
+   --shadowWidth 5 with a black shadow (other themes 0-2, hence 'sometimes'). The skin is flat: zero the width while the skin is on
+   (beats ST's inline --shadowWidth on <html>; the user's theme setting itself is not changed). */
+html.hsbc-skin-on{--shadowWidth:0!important}
