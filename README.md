@@ -20,6 +20,7 @@ It wraps SillyTavern in a banking-app style shell while keeping every native Sil
 - Language option for the theme's own texts: English, 简体中文, 繁體中文, 粵語.
 - Stop button: while SillyTavern is generating, the send arrow turns into a stop button (forwards to SillyTavern's own stop).
 - Chinese Subtitles (Personas page): optional Chinese line under each action, in Simplified, Traditional or Cantonese wording to match the theme language. Off by default.
+- Popups: close buttons always reachable (Manage chat files: X pinned top-right, tap outside to close).
 - Welcome card image: choose your own picture for the welcome screen (stored in the extension settings), reset to default any time.
 
 All options live in **Extensions → HSBC UK Theme Settings**.

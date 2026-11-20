@@ -3129,3 +3129,23 @@ html.hsbc-skin-on #hsbc-uk-app:not(#hsbc-m):not(#hsbc-n) #hsbc-native-host>#Worl
 #hsbc-uk-app:not(#hsbc-m):not(#hsbc-n) #hsbc-cards-page:not(.is-bilingual) .hsbc-action-label > small{display:none!important}
 #hsbc-uk-app:not(#hsbc-m):not(#hsbc-n) #hsbc-cards-page.is-bilingual .hsbc-persona-action-grid > button > .hsbc-action-label > small{display:block!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
 #hsbc-native-host>#rm_extensions_block .hsbc-theme-settings .hsbc-theme-help{display:block!important;margin-top:4px!important;color:#767676!important;font-size:12px!important;line-height:1.35!important;font-weight:400!important}
+/* 1.0.40d — 2026-11-20: Manage chat files popup - the close X sat at the END of the wrapping header row (1.0.31 flex-wrap), so it was
+   pushed to a later line or out of the panel. Now it is pinned top-right inside the panel (12/12, 36x36, above the header content) and
+   the header row keeps 44px clear on the right. Phone: title + "?" on line 1, New chat | Import on line 2 (equal, 40px, 8px gap). */
+html.hsbc-skin-on #shadow_select_chat_popup #select_chat_popup{position:relative!important;overflow-x:hidden!important}
+html.hsbc-skin-on #shadow_select_chat_popup #select_chat_popup #select_chat_cross{position:absolute!important;top:12px!important;right:12px!important;width:36px!important;height:36px!important;margin:0!important;z-index:5!important;opacity:1!important;flex:none!important}
+html.hsbc-skin-on #shadow_select_chat_popup #select_chat_popup>.flex-container:first-of-type{padding-right:52px!important}
+@media (max-width: 640px) {
+  html.hsbc-skin-on #shadow_select_chat_popup #select_chat_popup>.flex-container:first-of-type{padding:12px 52px 12px 16px!important;row-gap:8px!important;column-gap:8px!important}
+  html.hsbc-skin-on #shadow_select_chat_popup #select_chat_popup>.flex-container:first-of-type>#selectChatPopupHeaderText{flex:1 0 100%!important;order:1!important;min-height:36px!important;display:flex!important;align-items:center!important;margin:0!important}
+  html.hsbc-skin-on #shadow_select_chat_popup #select_chat_popup>.flex-container:first-of-type>:is(#newChatFromManageScreenButton,#chat_import_button){order:2!important;flex:1 1 calc(50% - 4px)!important;min-width:0!important;height:40px!important;min-height:40px!important;justify-content:center!important}
+  html.hsbc-skin-on #shadow_select_chat_popup #select_chat_popup>.flex-container:first-of-type>:not(#selectChatPopupHeaderText):not(#newChatFromManageScreenButton):not(#chat_import_button):not(#select_chat_cross){order:3!important}
+  html.hsbc-skin-on #shadow_select_chat_popup #select_chat_popup>.flex-container:first-of-type>#select_chat_search{flex:1 1 0!important;min-width:0!important}
+}
+@media (max-width: 640px) {
+  /* only the title line yields to the X; the button and search lines use the full inner width */
+  html.hsbc-skin-on #shadow_select_chat_popup #select_chat_popup>.flex-container:first-of-type{padding:12px 16px!important}
+  html.hsbc-skin-on #shadow_select_chat_popup #select_chat_popup>.flex-container:first-of-type>#selectChatPopupHeaderText{flex:0 0 calc(100% - 44px)!important;max-width:calc(100% - 44px)!important}
+}
+/* 1.0.40d: the header row must not shrink in the flex-column panel (it was squeezed to 79px and the chat list slid over the buttons) */
+html.hsbc-skin-on #shadow_select_chat_popup #select_chat_popup>.flex-container:first-of-type{flex:0 0 auto!important}
