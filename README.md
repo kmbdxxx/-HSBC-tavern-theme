@@ -31,6 +31,7 @@ It wraps SillyTavern in a banking-app style shell while keeping every native Sil
 - Enter adds a new line by default (phone and desktop); send with the send button. Theme setting "Enter key sends message" restores sending on Enter.
 - Chat input: no scrollbar on phones, a 4px light scrollbar on desktop. Phones: the chat panel (or the Home tile) starts directly under the tab bar.
 - Extensions > Regex opens faster: off-screen script rows skip layout (same look).
+- Regex/ticket blocks that copy the message colour now get the skin ink (the hidden message template uses it). Desktop Presets: Multi-select and Remove selected buttons (removes prompts from the current list like the single remove icon).
 - Welcome card image: choose your own picture for the welcome screen (stored in the extension settings), reset to default any time.
 
 All options live in **Extensions → HSBC UK Theme Settings**.
