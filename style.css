@@ -3149,3 +3149,56 @@ html.hsbc-skin-on #shadow_select_chat_popup #select_chat_popup>.flex-container:f
 }
 /* 1.0.40d: the header row must not shrink in the flex-column panel (it was squeezed to 79px and the chat list slid over the buttons) */
 html.hsbc-skin-on #shadow_select_chat_popup #select_chat_popup>.flex-container:first-of-type{flex:0 0 auto!important}
+
+/* 1.0.42a — 2026-11-20 */
+/* Item A: '#hsbc-uk-app textarea{font:inherit}' (more specific) reset the chat field's line-height to 'normal' (~17px); restore 20px.
+   Max height = old 28dvh + one line (JS keeps the same value inline); phone safety cap 40dvh. */
+html.hsbc-skin-on #hsbc-uk-app #hsbc-footer #hsbc-chat-input{line-height:20px!important;max-height:calc(28dvh + 20px)!important}
+@media (max-width: 640px) {
+  html.hsbc-skin-on #hsbc-uk-app #hsbc-footer #hsbc-chat-input{max-height:min(calc(28dvh + 20px), 40dvh)!important}
+}
+/* Item A: '#hsbc-uk-app *' gives every node a .01ms transition; the field height must jump (clear/send shrinks in the same frame) */
+html.hsbc-skin-on #hsbc-uk-app #hsbc-footer #hsbc-chat-input{transition:none!important}
+/* Item B (phone only): grouped child prompts were indented (padding-left:40px, style.css ~841) so the name column shrank to ~98px.
+   Children now start at the group row's 16px edge; name gets flex 1 1 120px (min 120px); tokens + controls form one right-aligned group. */
+@media (max-width: 640px) {
+  html.hsbc-skin-on #hsbc-uk-app:not(#hsbc-m):not(#hsbc-n) #hsbc-native-host>#left-nav-panel #completion_prompt_manager #completion_prompt_manager_list .bai-bai-preset-group-list>li.completion_prompt_manager_prompt{box-sizing:border-box!important;min-height:56px!important;margin:0!important;padding:8px 16px!important;border-left:0!important;flex-wrap:wrap!important;align-items:center!important;column-gap:0!important;row-gap:4px!important}
+  html.hsbc-skin-on #hsbc-uk-app:not(#hsbc-m):not(#hsbc-n) #hsbc-native-host>#left-nav-panel #completion_prompt_manager #completion_prompt_manager_list .bai-bai-preset-group-list>li.completion_prompt_manager_prompt:active{background-color:#F3F4F6!important}
+  html.hsbc-skin-on #hsbc-uk-app:not(#hsbc-m):not(#hsbc-n) #hsbc-native-host>#left-nav-panel #completion_prompt_manager #completion_prompt_manager_list .bai-bai-preset-group-list>li.completion_prompt_manager_prompt>.drag-handle{order:0!important;flex:0 0 20px!important;width:20px!important;min-width:20px!important;max-width:20px!important;margin:0 8px 0 0!important}
+  html.hsbc-skin-on #hsbc-uk-app:not(#hsbc-m):not(#hsbc-n) #hsbc-native-host>#left-nav-panel #completion_prompt_manager #completion_prompt_manager_list .bai-bai-preset-group-list>li.completion_prompt_manager_prompt>.completion_prompt_manager_prompt_name{order:0!important;flex:1 1 120px!important;min-width:120px!important;max-width:none!important;width:auto!important;margin:0!important}
+  html.hsbc-skin-on #hsbc-uk-app:not(#hsbc-m):not(#hsbc-n) #hsbc-native-host>#left-nav-panel #completion_prompt_manager #completion_prompt_manager_list .bai-bai-preset-group-list>li.completion_prompt_manager_prompt>.completion_prompt_manager_prompt_name .prompt-manager-inspect-action{min-width:0!important;white-space:normal!important;word-break:normal!important;overflow-wrap:break-word!important}
+  html.hsbc-skin-on #hsbc-uk-app:not(#hsbc-m):not(#hsbc-n) #hsbc-native-host>#left-nav-panel #completion_prompt_manager #completion_prompt_manager_list .bai-bai-preset-group-list>li.completion_prompt_manager_prompt>.prompt_manager_prompt_tokens{order:1!important;flex:0 0 auto!important;min-width:0!important;margin:0 0 0 auto!important;padding-left:4px!important;text-align:right!important;justify-content:flex-end!important}
+  html.hsbc-skin-on #hsbc-uk-app:not(#hsbc-m):not(#hsbc-n) #hsbc-native-host>#left-nav-panel #completion_prompt_manager #completion_prompt_manager_list .bai-bai-preset-group-list>li.completion_prompt_manager_prompt>span:not([class]){order:2!important;flex:0 0 auto!important;margin:0 0 0 4px!important}
+  html.hsbc-skin-on #hsbc-uk-app:not(#hsbc-m):not(#hsbc-n) #hsbc-native-host>#left-nav-panel #completion_prompt_manager #completion_prompt_manager_list .bai-bai-preset-group-list>li.completion_prompt_manager_prompt .prompt_manager_prompt_controls{gap:4px!important;min-width:0!important}
+  html.hsbc-skin-on #hsbc-uk-app:not(#hsbc-m):not(#hsbc-n) #hsbc-native-host>#left-nav-panel #completion_prompt_manager #completion_prompt_manager_list .bai-bai-preset-group-list>li.completion_prompt_manager_prompt .prompt_manager_prompt_controls>.menu_button{box-sizing:border-box!important;width:36px!important;min-width:36px!important;height:36px!important;min-height:36px!important;margin:0!important}
+}
+/* Item B: if handle + 120px name + tokens + controls do not fit (list inner width < ~322px, i.e. viewport < 378px), put the whole
+   tokens/controls group on a second line, right-aligned, instead of squeezing the name */
+@media (max-width: 377.98px) {
+  html.hsbc-skin-on #hsbc-uk-app:not(#hsbc-m):not(#hsbc-n) #hsbc-native-host>#left-nav-panel #completion_prompt_manager #completion_prompt_manager_list .bai-bai-preset-group-list>li.completion_prompt_manager_prompt>.completion_prompt_manager_prompt_name{flex:1 1 calc(100% - 28px)!important}
+}
+
+/* 1.0.40e — 2026-11-20: Manage chat files popup alignment.
+   Cause of the right shift (phone): 1.0.31 gives the panel margin:0 12px, style.css ~2491 adds left:12px, and 1.0.40d made it
+   position:relative -> left:12px became an extra 12px offset (L24, R392). Panel padding 10px + list scrollbar (11px) broke the edges.
+   X: back in the header flow (not absolute) so it is centred on the title line and ends at the content edge on every width. */
+html.hsbc-skin-on #shadow_select_chat_popup #select_chat_popup #select_chat_cross{position:static!important;top:auto!important;right:auto!important;order:1!important;flex:0 0 36px!important;align-self:center!important;margin:0!important;background-position:50% 50%!important;background-color:transparent!important}
+html.hsbc-skin-on #shadow_select_chat_popup #select_chat_popup>.flex-container:first-of-type{padding-right:16px!important}
+@media (max-width: 640px) {
+  html.hsbc-skin-on #shadow_select_chat_popup #select_chat_popup{left:0!important;right:0!important;transform:none!important;width:auto!important;max-width:none!important;margin-left:12px!important;margin-right:12px!important;padding-left:0!important;padding-right:0!important}
+  html.hsbc-skin-on #shadow_select_chat_popup #select_chat_popup>.flex-container:first-of-type{padding:0 16px 12px!important}
+  html.hsbc-skin-on #shadow_select_chat_popup #select_chat_popup>.flex-container:first-of-type>#selectChatPopupHeaderText{flex:0 0 calc(100% - 44px)!important;max-width:calc(100% - 44px)!important;height:56px!important;min-height:56px!important;display:flex!important;align-items:center!important;margin:0!important}
+  /* the empty import holder (0px wide) still took one 8px flex gap before the backup button: take it out of the flow (not removed) */
+  html.hsbc-skin-on #shadow_select_chat_popup #select_chat_popup>.flex-container:first-of-type>#select_chat_import{position:absolute!important;width:0!important;height:0!important;overflow:hidden!important}
+  /* list: rows end at the content edge; the scrollbar (if any) sits inside the 16px right padding (--hsbc-sbw set by index.js) */
+  html.hsbc-skin-on #shadow_select_chat_popup #select_chat_popup #select_chat_div{padding-left:16px!important;padding-right:max(0px, calc(16px - var(--hsbc-sbw, 0px)))!important}
+  html.hsbc-skin-on #shadow_select_chat_popup #select_chat_popup #selectChatPopupHeaderText a.notes-link{display:inline-flex!important;align-items:center!important;margin:0 0 0 8px!important;padding:0!important}
+  html.hsbc-skin-on #shadow_select_chat_popup #select_chat_popup #selectChatPopupHeaderText a.notes-link>.note-link-span.fa-circle-question{display:inline-block!important;width:20px!important;height:20px!important;margin:0!important;padding:0!important;color:transparent!important;filter:none!important;opacity:1!important;background:transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='7.1' fill='none' stroke='%23DB0011' stroke-width='1.2'/%3E%3Cpath d='M6.1 6.2a1.95 1.95 0 1 1 2.7 1.8c-.5.22-.8.6-.8 1.15v.35' fill='none' stroke='%23DB0011' stroke-width='1.3' stroke-linecap='round'/%3E%3Ccircle cx='8' cy='11.7' r='.95' fill='%23DB0011'/%3E%3C/svg%3E") center/20px 20px no-repeat!important}
+}
+/* 1.0.40e item 4: #character_popup - the native X sat 5px above the title line; centre it on the h3 line (h3 22.7px at the panel's top padding) */
+html.hsbc-skin-on body.hsbc-ui-mounted #character_popup>#character_cross{top:10px!important}
+/* 1.0.40e item 4 (phone): JS-Slash-Runner prompt viewer keeps its desktop drag offset (translate3d 18px, fixed width) -> not centred.
+   On the phone pin it 12px from both sides (no drag offset); height/top from its own script are kept. */
+@media (max-width: 640px) {
+  html.hsbc-skin-on body.hsbc-ui-mounted>.dialog-teleported.dialog-resizable{left:12px!important;right:12px!important;width:auto!important;max-width:none!important;margin:0!important;transform:none!important}
+}
