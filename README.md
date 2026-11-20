@@ -23,6 +23,8 @@ It wraps SillyTavern in a banking-app style shell while keeping every native Sil
 - Popups: close buttons always reachable (Manage chat files: X pinned top-right, tap outside to close).
 - Chat input grows when other extensions fill it by code (e.g. suggested replies); one extra line of height before it scrolls.
 - Manage chat files on phones: centred panel, one content edge, X centred on the title line; Presets on phones: grouped prompts no longer indented.
+- Phones: the prompt edit (pencil) popup opens fully on screen (header with close X, fields scroll inside, Save always visible).
+- Products and services opens the current character's page first when a character chat is open; the list button still shows the list.
 - Welcome card image: choose your own picture for the welcome screen (stored in the extension settings), reset to default any time.
 
 All options live in **Extensions → HSBC UK Theme Settings**.
