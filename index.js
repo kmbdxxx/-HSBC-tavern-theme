@@ -1347,6 +1347,7 @@ async function hsbcPlaceThemeSettings(settings) {
 // MutationObserver). Only the element's own text node is replaced, icons inside stay. Setting: extension_settings.hsbcTavern.language.
 const HSBC_LANGS = { en: 'en', 'zh-CN': 'zh-CN', 'zh-TW': 'zh-Hant-TW', yue: 'zh-HK' };
 const HSBC_I18N = {
+  'set.enter': ['Enter key sends message', '回车键发送消息', 'Enter 鍵傳送訊息', '撳 Enter 鍵發送訊息'], 'set.enter.help': ['Off: Enter adds a new line, use the send button to send.', '关闭时：回车键换行，请用发送按钮发送。', '關閉時：Enter 鍵換行，請用傳送按鈕傳送。', '關閂時：撳 Enter 會換行，要撳發送掣先會發送。'], // 1.0.45
   'ext.update': ['Update', '有更新', '有更新', '有更新'], 'ext.update.aria': ['Update available', '有可用更新', '有可用更新', '有更新可用'], // 1.0.43a
   'nav.home': ['Home', '首页', '首頁', '主頁'], 'nav.pay': ['Pay', '转账', '轉帳', '轉賬'], 'nav.cards': ['Cards', '信用卡', '信用卡', '信用卡'], 'nav.save': ['Save & Invest', '储蓄及投资', '儲蓄及投資', '儲蓄及投資'],
   'aria.home': ['Home · Presets', '首页 · 预设', '首頁 · 預設', '主頁 · 預設'], 'aria.library': ['Open Library', '打开服务目录', '開啟服務目錄', '打開服務目錄'],
@@ -1807,6 +1808,7 @@ function installThemeSettings(extensionPanel) {
     + '<div class="hsbc-theme-row hsbc-theme-welcome"><span class="hsbc-theme-label">Welcome card image</span><div class="hsbc-theme-welcome-row"><img class="hsbc-theme-preview" alt="" hidden><label class="hsbc-theme-upload"><span>Choose image</span><input type="file" accept="image/png,image/jpeg,image/webp"></label><button class="hsbc-theme-reset" type="button">Reset to default</button></div></div>'
     + '<label class="hsbc-theme-row hsbc-theme-date-order"><span class="hsbc-theme-label">Welcome-card date order</span><select aria-label="Welcome-card date order"><option value="auto">Automatic (time zone)</option><option value="dmy">Day-month-year</option><option value="mdy">Month-day-year</option><option value="ymd">Year-month-day</option></select></label>'
     + '<label class="hsbc-theme-row hsbc-theme-qr checkbox_label"><input type="checkbox"><span>Show Quick Reply buttons in a pull-up drawer</span></label>'
+    + '<label class="hsbc-theme-row hsbc-theme-enter checkbox_label"><input type="checkbox"><span>Enter key sends message</span><small class="hsbc-theme-help" data-hsbc-i18n="set.enter.help">Off: Enter adds a new line, use the send button to send.</small></label>' // 1.0.45
     + '</div>');
   const preview = settings.querySelector('.hsbc-theme-preview');
   const showPreview = () => { const img = hsbcExtSettings().welcomeImage || ''; preview.hidden = !img; if (img) preview.src = img; else preview.removeAttribute('src'); };
@@ -1818,6 +1820,8 @@ function installThemeSettings(extensionPanel) {
   const language = settings.querySelector('.hsbc-theme-language select'); language.value = hsbcLang(); language.addEventListener('change', () => hsbcSetLanguage(language.value)); // 1.0.40
   const qr = settings.querySelector('.hsbc-theme-qr input'); qr.checked = hsbcExtSettings().qrDrawer !== false;
   qr.addEventListener('change', () => { hsbcExtSettings().qrDrawer = qr.checked; hsbcSaveExtSettings(); hsbcApplyQrMode(); hsbcQrGeometry(); });
+  const enterSends = settings.querySelector('.hsbc-theme-enter input'); enterSends.checked = hsbcExtSettings().enterSends === true; // 1.0.45
+  enterSends.addEventListener('change', () => { hsbcExtSettings().enterSends = enterSends.checked; hsbcSaveExtSettings(); hsbcApplyEnterMode(); });
   showPreview();
   window.setTimeout(() => { try { hsbcI18nApply(); } catch { /* ignore */ } }, 0); // 1.0.40c translate our drawer once built
   // ---- 1.0.39 settings position ---- top of the extensions list: right after the management toolbar row of .extensions_block
@@ -2080,3 +2084,36 @@ function hsbcCharactersPrepare() {
   const scan = () => document.querySelectorAll('dialog.popup').forEach(d => { if (d.querySelector('.extensions_info')) watch(d); });
   new MutationObserver(scan).observe(document.body, { childList: true }); scan();
 })();
+
+
+// ---- 1.0.45 enter-newline ----
+// Enter used to send because OUR composer (#hsbc-chat-input) called sendMessage() on Enter (SillyTavern's own send_on_enter is
+// separate and only acts while its hidden #send_textarea has focus). Setting 'Enter key sends message' (default OFF): while OFF one
+// capture-phase listener on window stops plain Enter / Shift+Enter keydown/keypress/keyup on our field and on #send_textarea before any
+// other handler (no preventDefault -> the browser inserts the line break; IME composition / keyCode 229 untouched; Ctrl/Meta/Alt pass);
+// enterkeyhint=enter shows a newline key on phones. ON: listener off, previous enterkeyhint restored -> unchanged old behaviour.
+const HSBC_ENTER_IDS = ['hsbc-chat-input', 'send_textarea'];
+const hsbcEnterHint = new Map(); let hsbcEnterObserver = null;
+function hsbcEnterBlocker(event) {
+  const target = event.target; if (!target || !HSBC_ENTER_IDS.includes(target.id)) return;
+  if (event.key !== 'Enter' || event.ctrlKey || event.metaKey || event.altKey || event.isComposing || event.keyCode === 229) return;
+  event.stopPropagation(); event.stopImmediatePropagation();
+}
+function hsbcBeforeInputGuard(event) {
+  const target = event.target; if (!target || !HSBC_ENTER_IDS.includes(target.id)) return;
+  if (event.inputType === 'insertLineBreak' || event.inputType === 'insertParagraph') event.stopImmediatePropagation(); // let the newline happen, hide it from other listeners
+}
+function hsbcApplyEnterMode() {
+  const off = hsbcExtSettings().enterSends !== true;
+  for (const type of ['keydown', 'keypress', 'keyup']) { window.removeEventListener(type, hsbcEnterBlocker, true); if (off) window.addEventListener(type, hsbcEnterBlocker, true); }
+  window.removeEventListener('beforeinput', hsbcBeforeInputGuard, true); if (off) window.addEventListener('beforeinput', hsbcBeforeInputGuard, true);
+  hsbcEnterObserver?.disconnect(); hsbcEnterObserver = null;
+  const nodes = HSBC_ENTER_IDS.map(id => document.getElementById(id)).filter(Boolean);
+  for (const node of nodes) {
+    if (off) { if (!hsbcEnterHint.has(node.id)) hsbcEnterHint.set(node.id, node.getAttribute('enterkeyhint')); if (node.getAttribute('enterkeyhint') !== 'enter') node.setAttribute('enterkeyhint', 'enter'); }
+    else if (hsbcEnterHint.has(node.id)) { const prev = hsbcEnterHint.get(node.id); if (prev === null) node.removeAttribute('enterkeyhint'); else node.setAttribute('enterkeyhint', prev); hsbcEnterHint.delete(node.id); }
+  }
+  if (off && nodes.length) { hsbcEnterObserver = new MutationObserver(() => nodes.forEach(n => { if (n.getAttribute('enterkeyhint') !== 'enter') n.setAttribute('enterkeyhint', 'enter'); })); nodes.forEach(n => hsbcEnterObserver.observe(n, { attributes: true, attributeFilter: ['enterkeyhint'] })); }
+  window.__hsbcEnterMode = off ? 'off' : 'on';
+}
+(function hsbcEnterInit() { let n = 0; const t = setInterval(() => { if (document.getElementById('hsbc-chat-input') || ++n > 60) { clearInterval(t); try { hsbcApplyEnterMode(); } catch (error) { console.error('[HSBC Tavern] enter mode', error); } } }, 500); })();
