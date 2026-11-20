@@ -27,6 +27,7 @@ It wraps SillyTavern in a banking-app style shell while keeping every native Sil
 - Products and services opens the current character's page first when a character chat is open; the list button still shows the list.
 - Manage extensions: extensions with an update get an amber dot and an "Update" tag next to the name; on phones the top buttons stack one per row and the third-party header no longer clips.
 - Presets: one column system for group rows and prompt rows (titles, handles, names and controls line up; 36px controls end at the content edge), also without the grouping extension.
+- Extensions > Regex: flat HSBC layout on the page content edge (red outlined buttons, 36px icon squares, flat group rows); stop button shows only a short rotating arc (no track ring).
 - Welcome card image: choose your own picture for the welcome screen (stored in the extension settings), reset to default any time.
 
 All options live in **Extensions → HSBC UK Theme Settings**.
