@@ -30,6 +30,7 @@ It wraps SillyTavern in a banking-app style shell while keeping every native Sil
 - Extensions > Regex: flat HSBC layout on the page content edge (red outlined buttons, 36px icon squares, flat group rows); stop button shows only a short rotating arc (no track ring).
 - Enter adds a new line by default (phone and desktop); send with the send button. Theme setting "Enter key sends message" restores sending on Enter.
 - Chat input: no scrollbar on phones, a 4px light scrollbar on desktop. Phones: the chat panel (or the Home tile) starts directly under the tab bar.
+- Extensions > Regex opens faster: off-screen script rows skip layout (same look).
 - Welcome card image: choose your own picture for the welcome screen (stored in the extension settings), reset to default any time.
 
 All options live in **Extensions → HSBC UK Theme Settings**.

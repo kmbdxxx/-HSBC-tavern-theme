@@ -3368,3 +3368,9 @@ html.hsbc-skin-on #hsbc-uk-app #hsbc-native-host>#rm_extensions_block #regex_con
 @media (max-width: 640px) {
   html.hsbc-skin-on #hsbc-uk-app:not(#hsbc-m):not(#hsbc-n):not(#hsbc-o) #hsbc-chat-viewport>.hsbc-chat-top{padding-top:0!important}
 }
+
+/* 1.0.47 — 2026-11-20 */
+/* Item B: opening the Regex drawer forced ONE synchronous layout of ~4200 nodes (another extension, cocktail ui-animation-optimizer,
+   measures the drawer with getBoundingClientRect). Script rows are 56px fixed-height (1.0.44a), so off-screen rows can skip layout:
+   content-visibility:auto + a 56px intrinsic size (identical geometry; measured 967 -> ~395 ms at CPU x4). */
+html.hsbc-skin-on #hsbc-uk-app #hsbc-native-host>#rm_extensions_block #regex_container .regex_settings>.inline-drawer>.inline-drawer-content .regex-script-label{content-visibility:auto;contain-intrinsic-size:auto 56px}
