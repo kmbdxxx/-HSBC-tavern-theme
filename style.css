@@ -3341,3 +3341,30 @@ html.hsbc-skin-on #hsbc-uk-app #hsbc-native-host>#rm_extensions_block #regex_con
 @media (prefers-reduced-motion: reduce) {
   #hsbc-uk-app:not(#hsbc-m):not(#hsbc-n) #hsbc-footer>.hsbc-send.is-stop>.hsbc-stop-icon .hsbc-stop-spin{display:none!important;animation:none!important}
 }
+
+/* 1.0.46 — 2026-11-20 */
+/* Item A: chat input scrollbar (the visible field is #hsbc-chat-input; ST's #send_textarea is hidden). Phone: none (touch/caret still
+   scroll). Desktop: 4px mini thumb. Chromium ignores ::-webkit-scrollbar once scrollbar-width/-color are set (its 'thin' is wider
+   than 6px), so the standard properties are only used where ::-webkit-scrollbar is not supported (Firefox). */
+@media (max-width: 640px) {
+  html.hsbc-skin-on #hsbc-uk-app #hsbc-footer #hsbc-chat-input{scrollbar-width:none!important}
+  html.hsbc-skin-on #hsbc-uk-app #hsbc-footer #hsbc-chat-input::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}
+}
+@media (min-width: 641px) {
+  html.hsbc-skin-on #hsbc-uk-app #hsbc-footer #hsbc-chat-input::-webkit-scrollbar{width:4px!important;height:4px!important;background:transparent!important}
+  html.hsbc-skin-on #hsbc-uk-app #hsbc-footer #hsbc-chat-input::-webkit-scrollbar-track{background:transparent!important}
+  html.hsbc-skin-on #hsbc-uk-app #hsbc-footer #hsbc-chat-input::-webkit-scrollbar-thumb{background:#D7D8D6!important;border-radius:2px!important}
+  html.hsbc-skin-on #hsbc-uk-app #hsbc-footer #hsbc-chat-input::-webkit-scrollbar-button{display:none!important;width:0!important;height:0!important}
+  @supports not selector(::-webkit-scrollbar) {
+    html.hsbc-skin-on #hsbc-uk-app #hsbc-footer #hsbc-chat-input{scrollbar-width:thin!important;scrollbar-color:#D7D8D6 transparent!important}
+  }
+}
+@media (min-width: 641px) and (hover: hover) and (pointer: fine) {
+  html.hsbc-skin-on #hsbc-uk-app #hsbc-footer #hsbc-chat-input::-webkit-scrollbar-thumb:hover{background:#767676!important}
+}
+/* Item B (phone): the 16px grey band between the tab bar and the first block was .hsbc-chat-top's padding-top (1.0.34 item C, also
+   the general 1.0.x rule). On the phone the first block (Home tile, or the white chat panel when no tile is shown) now starts directly
+   under the header hairline; side gutters and the tile -> chat gap (padding-bottom) are unchanged. Chat page only (Home = same page). */
+@media (max-width: 640px) {
+  html.hsbc-skin-on #hsbc-uk-app:not(#hsbc-m):not(#hsbc-n):not(#hsbc-o) #hsbc-chat-viewport>.hsbc-chat-top{padding-top:0!important}
+}
