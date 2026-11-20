@@ -2280,3 +2280,44 @@ async function hsbcMsConfirmDelete() {
     new MutationObserver(queue).observe(host, { childList: true, subtree: true }); queue(); };
   bind();
 })();
+
+// ---- 1.0.51 auto-lift-overlays ----
+// Any extension window that opens UNDER the skin shell (#hsbc-uk-app, z 300002) looks like a dead button (Tavern Helper, 奶·数据库 ...).
+// After every tap/click (and when <body> gets a new child) we look at the body's children that are not SillyTavern's own layout and
+// not ours; a visible fixed overlay (or an absolute one placed directly on <body>) below the shell is lifted to z-index 300004.
+// Covers future extensions without per-extension rules. Skipped: tiny helpers, invisible full-screen catchers (transparent, empty).
+const HSBC_LIFT_Z = 300004;
+const HSBC_LIFT_SKIP = new Set(['hsbc-uk-app', 'bg1', 'bg_custom', 'top-bar', 'top-settings-holder', 'sheld', 'options', 'extensionsMenu',
+  'expression-wrapper', 'visual-novel-wrapper', 'secrets_datalists', 'preloader', 'load-spinner', 'movingDivs', 'hsbc-debug-panel']);
+function hsbcLiftScan() {
+  const vw = window.innerWidth, vh = window.innerHeight; const shellZ = 300002; let lifted = 0;
+  const roots = [...document.body.children, ...(document.getElementById('movingDivs')?.children || [])];
+  const numZ = cs => { const z = parseInt(cs.zIndex, 10); return Number.isFinite(z) ? z : 0; };
+  const visibleBox = (el, cs) => { if (cs.display === 'none' || cs.visibility === 'hidden' || Number(cs.opacity) === 0) return null; const r = el.getBoundingClientRect(); if (r.width < 6 || r.height < 6 || r.right <= 0 || r.bottom <= 0 || r.left >= vw || r.top >= vh) return null; return r; };
+  const emptyCatcher = (el, cs, r) => { if (r.width * r.height < vw * vh * 0.9) return false; const bg = cs.backgroundColor; const transparent = bg === 'transparent' || /rgba\([^)]*,\s*0\)$/.test(bg); if (!transparent || cs.backgroundImage !== 'none') return false; return ![...el.querySelectorAll('*')].some(k => { const q = k.getBoundingClientRect(); return q.width > 4 && q.height > 4; }); };
+  for (const root of roots) {
+    if (root.nodeType !== 1 || HSBC_LIFT_SKIP.has(root.id) || /^(SCRIPT|STYLE|LINK|TEMPLATE|AUDIO|DIALOG)$/.test(root.tagName) || root.id?.startsWith('hsbc-') || root.closest('#hsbc-uk-app')) continue;
+    const rootCs = getComputedStyle(root); if (rootCs.display === 'none') continue;
+    const candidates = []; if (/^(fixed|absolute)$/.test(rootCs.position)) candidates.push(root);
+    // hidden subtrees (display:none) and script/style are rejected as a whole; at most 400 elements per root
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT, { acceptNode: x => (x.tagName === 'SCRIPT' || x.tagName === 'STYLE' || getComputedStyle(x).display === 'none' ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT) });
+    let n, count = 0; while ((n = walker.nextNode()) && count++ < 400) { if (getComputedStyle(n).position === 'fixed') candidates.push(n); }
+    for (const el of candidates) {
+      const cs = getComputedStyle(el); const r = visibleBox(el, cs); if (!r || numZ(cs) >= shellZ || el.dataset.hsbcLifted === '1' && numZ(cs) >= HSBC_LIFT_Z) continue;
+      if (emptyCatcher(el, cs, r)) continue;
+      // a low stacking context above it (positioned ancestor with its own z-index) must be lifted instead
+      let target = el; for (let a = el.parentElement; a && a !== document.body; a = a.parentElement) { const acs = getComputedStyle(a); if (acs.zIndex !== 'auto' && acs.position !== 'static') target = a; }
+      if (numZ(getComputedStyle(target)) >= shellZ) continue;
+      target.style.setProperty('z-index', String(HSBC_LIFT_Z), 'important'); target.dataset.hsbcLifted = '1'; lifted++;
+    }
+  }
+  if (lifted) hsbcDebugLog?.(`auto-lift: ${lifted} overlay(s) above the skin`);
+  return lifted;
+}
+(function hsbcLiftInit() {
+  let timers = [];
+  const schedule = () => { timers.forEach(clearTimeout); timers = [120, 500, 1500].map(ms => setTimeout(() => { try { hsbcLiftScan(); } catch (error) { console.error('[HSBC Tavern] auto-lift', error); } }, ms)); };
+  window.addEventListener('click', schedule, true); window.addEventListener('pointerup', schedule, true); window.addEventListener('keyup', event => { if (event.key === 'Enter' || event.key === ' ') schedule(); }, true);
+  new MutationObserver(recs => { if (recs.some(r => [...r.addedNodes].some(x => x.nodeType === 1 && !x.id?.startsWith('hsbc-')))) schedule(); }).observe(document.body, { childList: true });
+  const moving = document.getElementById('movingDivs'); if (moving) new MutationObserver(schedule).observe(moving, { childList: true });
+})();
