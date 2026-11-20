@@ -3221,3 +3221,33 @@ html.hsbc-skin-on body.hsbc-ui-mounted #character_popup>#character_cross{top:10p
   /* native close: pinned in the header row (position only; the icon's font is untouched) */
   html.hsbc-skin-on body.hsbc-ui-mounted #completion_prompt_manager_popup>#completion_prompt_manager_popup_edit #completion_prompt_manager_popup_entry_form_close{position:absolute!important;top:10px!important;right:12px!important;box-sizing:border-box!important;width:36px!important;min-width:36px!important;height:36px!important;min-height:36px!important;margin:0!important;padding:0!important;display:flex!important;align-items:center!important;justify-content:center!important;border:0!important;background:transparent!important;box-shadow:none!important;z-index:2!important}
 }
+
+/* 1.0.43a — 2026-11-20 */
+/* Item A: ST flags an extension with an update by adding .update_available to .extension_name (native colour limegreen; our skin
+   forces #1a1a1a, so it was invisible). index.js adds an amber dot before the name and an 'Update' tag after it on flagged rows only;
+   the name keeps its ink colour and is the only part that shrinks/ellipsizes. */
+body.hsbc-ui-mounted dialog.popup:has(.extensions_info):not(#hsbc-x) .extension_block :is(.extension_enabled,.extension_disabled,.extension_missing):has(>.extension_name.update_available){display:flex!important;align-items:center!important;gap:6px!important;min-width:0!important;max-width:100%!important;overflow:hidden!important}
+body.hsbc-ui-mounted dialog.popup:has(.extensions_info):not(#hsbc-x) .extension_block :is(.extension_enabled,.extension_disabled,.extension_missing):has(>.extension_name.update_available)>.extension_name{flex:0 1 auto!important;min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;color:#1a1a1a!important}
+body.hsbc-ui-mounted dialog.popup:has(.extensions_info):not(#hsbc-x) .extension_block :is(.extension_enabled,.extension_disabled,.extension_missing):has(>.extension_name.update_available)>:is(.extension_version,.extension_author){flex:none!important}
+body.hsbc-ui-mounted dialog.popup:has(.extensions_info):not(#hsbc-x) .extension_block :is(.extension_enabled,.extension_disabled,.extension_missing):has(>.extension_name.update_available)>.hsbc-ext-update-dot{flex:none!important;display:inline-block!important;width:8px!important;height:8px!important;border-radius:50%!important;background:#B26A00!important}
+body.hsbc-ui-mounted dialog.popup:has(.extensions_info):not(#hsbc-x) .extension_block :is(.extension_enabled,.extension_disabled,.extension_missing):has(>.extension_name.update_available)>.hsbc-ext-update-tag{flex:none!important;margin:0!important;padding:0!important;border:0!important;background:transparent!important;font-size:12px!important;font-weight:600!important;line-height:16px!important;color:#B26A00!important}
+/* Item C (phone): top action buttons in one wrapping grid, single-line labels; third-party header: label on its own line,
+   refresh + toggle buttons on their own row above the divider */
+@media (max-width: 640px) {
+  body.hsbc-ui-mounted dialog.popup:has(.extensions_info):not(#hsbc-x) .extensions_toolbar{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(0,1fr))!important;gap:8px!important;align-items:stretch!important}
+  body.hsbc-ui-mounted dialog.popup:has(.extensions_info):not(#hsbc-x) .extensions_toolbar>.menu_button{width:100%!important;min-width:0!important;height:auto!important;min-height:36px!important;padding:0 8px!important;justify-content:center!important;white-space:nowrap!important;font-size:13px!important;line-height:18px!important}
+  body.hsbc-ui-mounted dialog.popup:has(.extensions_info):not(#hsbc-x) .extensions_info .flex-container:has(>h3.margin0){flex-wrap:wrap!important;align-items:center!important;row-gap:0!important;column-gap:8px!important;overflow:visible!important}
+  body.hsbc-ui-mounted dialog.popup:has(.extensions_info):not(#hsbc-x) .extensions_info .flex-container:has(>h3.margin0)>h3{flex:1 1 100%!important;min-width:0!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+  body.hsbc-ui-mounted dialog.popup:has(.extensions_info):not(#hsbc-x) .extensions_info .flex-container:has(>h3.margin0)>.third_party_toolbar{flex:1 1 100%!important;display:flex!important;flex-wrap:wrap!important;align-items:center!important;gap:8px!important;margin:0!important;padding:8px 0 12px!important}
+  body.hsbc-ui-mounted dialog.popup:has(.extensions_info):not(#hsbc-x) .extensions_info .flex-container:has(>h3.margin0)>.third_party_toolbar>.menu_button{flex:none!important;white-space:nowrap!important}
+  body.hsbc-ui-mounted dialog.popup:has(.extensions_info):not(#hsbc-x) .extensions_info h3:not(.margin0){white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+}
+/* 1.0.43a item C: 'repeat(auto-fit, minmax(0,1fr))' resolves to dozens of empty tracks; the three labels need ~116px each at 13px but a
+   phone row gives ~95px per column, so they stack full-width, one per row (no wrapping, no clipping) */
+@media (max-width: 640px) {
+  body.hsbc-ui-mounted dialog.popup:has(.extensions_info):not(#hsbc-x) .extensions_toolbar{grid-template-columns:minmax(0,1fr)!important}
+}
+@media (max-width: 640px) {
+  /* the native empty spacer (.expander) took a grid row (+8px gap); hidden, not removed */
+  body.hsbc-ui-mounted dialog.popup:has(.extensions_info):not(#hsbc-x) .extensions_toolbar>.expander{display:none!important}
+}
