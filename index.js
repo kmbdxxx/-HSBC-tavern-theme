@@ -362,34 +362,19 @@ async function loadRecentChats(panel) {
     panel.dataset.loaded = ''; panel.replaceChildren(make('p', 'hsbc-recent-state', 'Chat history is not available right now.')); return;
   }
   try {
-    const characterList = Array.from(context.characters, (character, index) => ({ character, index }))
-      .filter(({ character }) => character?.avatar)
-      .sort((a, b) => timestamp(b.character.date_last_chat) - timestamp(a.character.date_last_chat));
-    const headers = context.getRequestHeaders(), allChats = []; let next = 0;
-    const worker = async () => {
-      while (next < characterList.length) {
-        const { character, index } = characterList[next++];
-        try {
-          const response = await fetch('/api/chats/search', { method: 'POST', headers, body: JSON.stringify({ query: '', avatar_url: character.avatar, group_id: null }), cache: 'no-cache' });
-          if (!response.ok) continue;
-          const chats = await response.json();
-          // 1.0.50: branches share their last message, so last_mes alone picked an arbitrary branch; the character's active chat is the one
-          // that was really played last (and the one ST opens). Activity = the newer of the character's date_last_chat and that chat's last_mes.
-          const stripExt = name => String(name || '').replace(/.jsonl$/i, ''); const active = stripExt(character.chat);
-          const chat = chats.find(item => active && stripExt(item.file_name) === active) || [...chats].sort((a, b) => timestamp(b.last_mes) - timestamp(a.last_mes))[0];
-          if (chat) allChats.push({ chat, character, characterId: index, lastChatAt: Math.max(timestamp(character.date_last_chat), timestamp(chat.last_mes)) });
-        } catch (error) { console.warn('HSBC theme: chat history lookup failed for one character.', error); }
-      }
-    };
-    await Promise.all(Array.from({ length: Math.min(6, characterList.length) }, worker));
+    // 1.0.52: the same data and order as SillyTavern's own Recent Chats (welcome screen): /api/chats/recent (newest files first) sorted
+    // by the last message time parsed with ST's timestampToMoment (our Date.parse could not read ST's own date formats -> 0 -> wrong order).
+    const headers = context.getRequestHeaders();
+    const response = await fetch('/api/chats/recent', { method: 'POST', headers, body: JSON.stringify({ max: 40, pinned: [] }), cache: 'no-cache' });
+    if (!response.ok) throw new Error('recent chats HTTP ' + response.status);
+    const data = await response.json();
     if (panel.__hsbcLoadToken !== loadToken) return;
-    const uniqueCharacters = new Map();
-    for (const entry of allChats) {
-      const key = String(entry.character.avatar || entry.characterId);
-      const previous = uniqueCharacters.get(key);
-      if (!previous || entry.lastChatAt > previous.lastChatAt) uniqueCharacters.set(key, entry);
-    }
-    const recent = [...uniqueCharacters.values()].sort((a, b) => b.lastChatAt - a.lastChatAt); panel.replaceChildren();
+    let toMoment = null, sortM = null; try { const u = await import('/scripts/utils.js'); toMoment = u.timestampToMoment; sortM = u.sortMoments; } catch { /* fall back to our parser */ }
+    const when = value => { try { const m = toMoment ? toMoment(value) : null; const v = m && m.isValid?.() ? m.valueOf() : timestamp(value); return Number.isFinite(v) ? v : 0; } catch { return timestamp(value); } };
+    const recent = (Array.isArray(data) ? data : []).map(chat => ({ chat, characterId: context.characters.findIndex(x => x?.avatar === chat.avatar) }))
+      .filter(entry => entry.characterId >= 0).map(entry => ({ ...entry, character: context.characters[entry.characterId], lastChatAt: when(entry.chat.last_mes) }))
+      .sort((x, y) => (sortM && toMoment ? sortM(toMoment(x.chat.last_mes), toMoment(y.chat.last_mes)) : y.lastChatAt - x.lastChatAt));
+    panel.replaceChildren();
     const liveCtx = window.SillyTavern?.getContext?.() || context; const openIndex = liveCtx.groupId ? -1 : recent.findIndex(entry => String(entry.characterId) === String(liveCtx.characterId) && String(entry.chat.file_name || '').replace(/.jsonl$/i, '') === String(liveCtx.characters?.[entry.characterId]?.chat || ''));
     if (openIndex > 0) recent.unshift(recent.splice(openIndex, 1)[0]); // 1.0.50
     if (!recent.length) { panel.append(make('p', 'hsbc-recent-state', 'No recent chats found.')); return; }
@@ -410,7 +395,7 @@ async function loadRecentChats(panel) {
         } catch (error) { console.error('HSBC theme: could not open selected recent chat.', error); row.disabled = false; }
       }, 'hsbc-recent-row');
       row.querySelector('.hsbc-recent-copy strong').textContent = character.name || 'Character';
-      const snippet = chat.preview_message || chat.last_mes_text || chat.last_mes || chat.file_name || '';
+      const snippet = String(chat.file_name || '').replace(/.jsonl$/i, '') || chat.preview_message || ''; // 1.0.52: chat name, as in ST's own Recent Chats
       row.querySelector('.hsbc-recent-copy small').textContent = String(snippet).replace(/\s+/g, ' ').trim();
       const date = new Date(lastChatAt); row.querySelector('.hsbc-recent-copy time').textContent = Number.isFinite(date.getTime()) && lastChatAt > 0 ? new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(date).replace(',', '') : '';
       row.dataset.chatFile = chat.file_name || ''; panel.append(row);
