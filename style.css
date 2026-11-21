@@ -3425,3 +3425,15 @@ html.hsbc-skin-on{--shadowWidth:0!important}
 /* 1.0.50 b: JS-Slash-Runner (酒馆助手) opens its editors / import / built-in library as div.TH-popup on <body> (z-index 10000), i.e. UNDER
    the skin shell (z 300002) - the buttons seemed dead. Lift them like ST's teleported dialogs (1.0.31). */
 body.hsbc-ui-mounted>.TH-popup,body.hsbc-ui-mounted #movingDivs>.TH-popup{z-index:300004!important}
+
+/* 1.0.50 — 2026-11-21 */
+/* Typing cost: where supported the chat field sizes itself to its content (no per-key JS measuring); same min/max as before (CSS above). */
+@supports (field-sizing: content) {
+  html.hsbc-skin-on #hsbc-uk-app #hsbc-footer #hsbc-chat-input{field-sizing:content!important;height:auto}
+}
+/* A5 'root-level theme': windows outside the shell (ST draggable panels in #movingDivs, native menus, dropdowns, other extensions'
+   popups on <body>) now get the same skin palette variables the skin already gives its own panels/popups (1.0.31), so anything drawn
+   with var(--SmartTheme*) follows the skin. Not applied to the shell itself (the chat and message content keep their rules).
+html.hsbc-skin-on body>:not(#hsbc-uk-app):not(#sheld):not(#top-bar):not(#top-settings-holder):not(#bg1):not(#bg_custom):not(script):not(style){--SmartThemeBodyColor:#1a1a1a;--SmartThemeEmColor:#767676;--SmartThemeUnderlineColor:#1a1a1a;--SmartThemeQuoteColor:#DB0011;--SmartThemeBlurTintColor:#fff;--SmartThemeChatTintColor:#fff;--SmartThemeUserMesBlurTintColor:#F3F4F6;--SmartThemeBotMesBlurTintColor:#fff;--SmartThemeBorderColor:#D7D8D6;--SmartThemeShadowColor:transparent;--SmartThemeCheckboxBgColor:#fff;--SmartThemeCheckboxTickColor:#fff;--SmartThemeFastUIBGColor:#fff;--SmartThemeBlurStrength:0}
+/* Part B: 'Current' tag on the open chat in the Home card's recent chats (red, 12px) */
+html.hsbc-skin-on #hsbc-uk-app .hsbc-recent-chats .hsbc-recent-row .hsbc-recent-current{display:inline-block;margin-left:6px;font-size:12px;font-weight:600;line-height:16px;color:#DB0011;vertical-align:1px}

@@ -35,6 +35,7 @@ It wraps SillyTavern in a banking-app style shell while keeping every native Sil
 - No blurred text: the UI theme text shadow is switched off while the skin is on (also in other extensions' panels and toasts).
 - JS-Slash-Runner (Tavern Helper) windows (new script / folder, import, built-in library) open above the skin instead of underneath it.
 - Windows of any extension (also ones you install later) that would open underneath the skin are lifted above it automatically after each tap.
+- Faster typing (no per-key layout measuring; native input event coalesced), extension windows follow the skin palette, Home recent chats always fresh and show each character's current chat (open chat marked "Current").
 - Welcome card image: choose your own picture for the welcome screen (stored in the extension settings), reset to default any time.
 
 All options live in **Extensions → HSBC UK Theme Settings**.
