@@ -389,8 +389,12 @@ async function loadRecentChats(panel) {
       const row = button('', `${avatar}<span class="hsbc-recent-copy"><strong></strong><small></small><time></time></span>${ICON.right}`, async () => {
         row.disabled = true;
         try {
-          if (Number(context.characterId) !== Number(characterId)) await context.selectCharacterById?.(Number(characterId));
-          await context.openCharacterChat?.(chat.file_name);
+          // 1.0.54: ST's openCharacterChat expects the chat NAME (no .jsonl). The file name made ST look for '<name>.jsonl.jsonl', not
+          // find it and start a new empty chat in the selected character's folder. Also make sure the right character is active first.
+          const chatName = String(chat.file_name || '').replace(/.jsonl$/i, ''); const live = () => window.SillyTavern?.getContext?.() || context;
+          if (Number(live().characterId) !== Number(characterId)) await context.selectCharacterById?.(Number(characterId));
+          if (Number(live().characterId) !== Number(characterId) || !chatName) throw new Error('character switch failed');
+          if (String(live().chatId || '') !== chatName) await context.openCharacterChat?.(chatName);
           panel.hidden = true; document.querySelector('.hsbc-account-expand')?.setAttribute('aria-expanded', 'false');
         } catch (error) { console.error('HSBC theme: could not open selected recent chat.', error); row.disabled = false; }
       }, 'hsbc-recent-row');
