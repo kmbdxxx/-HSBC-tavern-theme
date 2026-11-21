@@ -2351,3 +2351,24 @@ function hsbcLiftScan() {
   const bind = () => { try { const ctx = SillyTavern.getContext(); const t2 = ctx.eventTypes || ctx.event_types || {}; for (const type of [t2.CHAT_CHANGED, t2.CHAT_CREATED, t2.CHAT_DELETED, t2.GROUP_CHAT_CREATED, t2.MESSAGE_SENT, t2.MESSAGE_RECEIVED].filter(Boolean)) ctx.eventSource?.on?.(type, refresh); return true; } catch { return false; } };
   if (!bind()) { let n = 0; const iv = setInterval(() => { if (bind() || ++n > 30) clearInterval(iv); }, 1000); }
 })();
+
+// ---- 1.0.51 keyboard-over-dialogs ----
+// SillyTavern's viewport meta uses interactive-widget=resizes-content: on phones every keyboard open/close resizes the layout viewport
+// and re-lays out the whole page (~17k nodes, plus ST/extension resize handlers) - editing a field in a popup (regex editor ...) lagged
+// for ~1 s and showed an empty grey band while the page caught up. While the focused field is inside a popup/dialog the keyboard now
+// overlays the page (resizes-visual: the browser pans to the field, nothing re-lays out); any other focus (chat input, page fields)
+// restores SillyTavern's original setting. Touch devices only; the meta tag is only edited, never replaced.
+(function hsbcKeyboardOverDialogs() {
+  const meta = document.querySelector('meta[name="viewport"]'); if (!meta) return;
+  const original = meta.getAttribute('content') || ''; if (!/interactive-widget\s*=\s*resizes-content/.test(original)) return;
+  const overlay = original.replace(/interactive-widget\s*=\s*resizes-content/, 'interactive-widget=resizes-visual');
+  const coarse = window.matchMedia('(pointer: coarse)');
+  const MODAL = 'dialog[open], .dialog-teleported, .TH-popup, #completion_prompt_manager_popup, #character_popup, #shadow_select_chat_popup, #dialogue_popup';
+  const typing = el => el instanceof Element && (el.matches('input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=button]):not([type=submit]), textarea, select, [contenteditable=""], [contenteditable="true"]'));
+  const apply = mode => { const want = mode === 'overlay' ? overlay : original; if (meta.getAttribute('content') !== want) meta.setAttribute('content', want); window.__hsbcKbMode = mode; };
+  document.addEventListener('focusin', event => {
+    const el = event.target; if (!coarse.matches || !typing(el)) return;
+    apply(el.closest(MODAL) && !el.closest('#hsbc-footer') ? 'overlay' : 'resize');
+  }, true);
+  window.__hsbcKbMode = 'resize';
+})();
