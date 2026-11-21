@@ -3437,3 +3437,35 @@ body.hsbc-ui-mounted>.TH-popup,body.hsbc-ui-mounted #movingDivs>.TH-popup{z-inde
 html.hsbc-skin-on body>:not(#hsbc-uk-app):not(#sheld):not(#top-bar):not(#top-settings-holder):not(#bg1):not(#bg_custom):not(script):not(style){--SmartThemeBodyColor:#1a1a1a;--SmartThemeEmColor:#767676;--SmartThemeUnderlineColor:#1a1a1a;--SmartThemeQuoteColor:#DB0011;--SmartThemeBlurTintColor:#fff;--SmartThemeChatTintColor:#fff;--SmartThemeUserMesBlurTintColor:#F3F4F6;--SmartThemeBotMesBlurTintColor:#fff;--SmartThemeBorderColor:#D7D8D6;--SmartThemeShadowColor:transparent;--SmartThemeCheckboxBgColor:#fff;--SmartThemeCheckboxTickColor:#fff;--SmartThemeFastUIBGColor:#fff;--SmartThemeBlurStrength:0}
 /* Part B: 'Current' tag on the open chat in the Home card's recent chats (red, 12px) */
 html.hsbc-skin-on #hsbc-uk-app .hsbc-recent-chats .hsbc-recent-row .hsbc-recent-current{display:inline-block;margin-left:6px;font-size:12px;font-weight:600;line-height:16px;color:#DB0011;vertical-align:1px}
+
+/* 1.0.53 — 2026-11-21 */
+/* (1) phone: the Bank A/C tile is a separate card - keep the 16px gap above it (1.0.46 removed it for every state); the chat panel
+    alone still starts right under the header */
+@media (max-width: 640px) {
+  html.hsbc-skin-on #hsbc-uk-app:not(#hsbc-m):not(#hsbc-n):not(#hsbc-o):not(#hsbc-p) #hsbc-chat-viewport>.hsbc-chat-top:has(>.hsbc-account-wrap:not([hidden]) .hsbc-account-card){padding-top:16px!important}
+}
+/* (2) scrollbars (phone + desktop): SillyTavern draws 0.7rem rounded grey thumbs with an inset shadow; the skin uses one hairline
+    style: 4px, #D7D8D6 thumb, transparent track, 2px radius, no border/shadow (#767676 on hover with a mouse). Scrollbars only. */
+html.hsbc-skin-on body ::-webkit-scrollbar{width:4px!important;height:4px!important;background:transparent!important}
+html.hsbc-skin-on body ::-webkit-scrollbar-track,html.hsbc-skin-on body ::-webkit-scrollbar-track:hover,html.hsbc-skin-on body ::-webkit-scrollbar-corner{background:transparent!important}
+html.hsbc-skin-on body ::-webkit-scrollbar-thumb,html.hsbc-skin-on body ::-webkit-scrollbar-thumb:vertical,html.hsbc-skin-on body ::-webkit-scrollbar-thumb:horizontal{background-color:#D7D8D6!important;background-clip:border-box!important;border:0!important;box-shadow:none!important;border-radius:2px!important;min-height:24px!important;min-width:24px!important}
+html.hsbc-skin-on body ::-webkit-scrollbar-button{display:none!important;width:0!important;height:0!important}
+@media (hover: hover) and (pointer: fine) {
+  html.hsbc-skin-on body ::-webkit-scrollbar-thumb:hover{background-color:#767676!important}
+}
+@supports not selector(::-webkit-scrollbar) {
+  html.hsbc-skin-on body{scrollbar-width:thin;scrollbar-color:#D7D8D6 transparent}
+}
+/* (3) World Info entry: the drawer chevron carried ST's filter:brightness(.75) (darker red than the entry buttons); same red now */
+html.hsbc-skin-on #hsbc-uk-app #hsbc-native-host>#WorldInfo .world_entry :is(.inline-drawer-toggle,.inline-drawer-icon,.fa-circle-question,.note-link-span){filter:none!important;opacity:1!important}
+/* (4) Regex: 1.0.44a's filter reset for the top text buttons used a '>' selector inside :is() (invalid, dropped) - ST's grayscale
+    filter stayed and the six buttons looked darker than the rest */
+html.hsbc-skin-on #hsbc-uk-app #hsbc-native-host>#rm_extensions_block #regex_container .regex_settings>.inline-drawer>.inline-drawer-content>.flex-container:first-child>.menu_button{filter:none!important}
+/* (2b) the page scroller had its own 10px #C1C1C1 scrollbar (desktop; phone keeps it hidden): same hairline */
+@media (min-width: 641px) {
+  html.hsbc-skin-on #hsbc-uk-app #hsbc-subpage::-webkit-scrollbar{width:4px!important;height:4px!important}
+  html.hsbc-skin-on #hsbc-uk-app #hsbc-subpage::-webkit-scrollbar-thumb{background:#D7D8D6!important;border:0!important;border-radius:2px!important;background-clip:border-box!important}
+}
+@media (min-width: 641px) and (hover: hover) and (pointer: fine) {
+  html.hsbc-skin-on #hsbc-uk-app #hsbc-subpage::-webkit-scrollbar-thumb:hover{background:#767676!important}
+}

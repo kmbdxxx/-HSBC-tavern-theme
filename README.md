@@ -37,6 +37,7 @@ It wraps SillyTavern in a banking-app style shell while keeping every native Sil
 - Windows of any extension (also ones you install later) that would open underneath the skin are lifted above it automatically after each tap.
 - Faster typing (no per-key layout measuring; native input event coalesced), extension windows follow the skin palette, Home recent chats use SillyTavern's own Recent Chats data and order (open chat marked "Current").
 - Phones: typing in a popup (regex editor, prompt editor, Tavern Helper windows ...) no longer re-lays out the whole page when the keyboard opens/closes (no lag, no grey band).
+- Hairline 4px light-grey scrollbars everywhere; Bank A/C card keeps its gap under the tab bar on phones; consistent red for World Info chevrons and the Regex buttons.
 - Welcome card image: choose your own picture for the welcome screen (stored in the extension settings), reset to default any time.
 
 All options live in **Extensions → HSBC UK Theme Settings**.
