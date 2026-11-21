@@ -41,6 +41,7 @@ It wraps SillyTavern in a banking-app style shell while keeping every native Sil
 - Recent chats open the selected chat instead of creating an empty "….jsonl.jsonl" copy.
 - Loading screen: SillyTavern's loading popup shows the red HSBC welcome look (no white card flash); a marked block is kept in ST Custom CSS so it appears about 1 s after a reload.
 - Loading screen is a full copy of the welcome screen (greeting, Log on with, both buttons, in the skin language); the welcome screen enters by itself after 3 s.
+- Quick actions drawer by keyboard: Alt+Q opens/closes it from anywhere (also while typing), Space/Enter when nothing is focused, Esc closes; while open, 1-9 / 0 press its buttons left to right.
 - Welcome card image: choose your own picture for the welcome screen (stored in the extension settings), reset to default any time.
 
 All options live in **Extensions → HSBC UK Theme Settings**.

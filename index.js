@@ -1290,6 +1290,36 @@ function hsbcQrDrawer38() {
   window.addEventListener('resize', queue);
   if (window.ResizeObserver) { const ro = new ResizeObserver(queue); const chat = document.getElementById('chat'); if (chat) ro.observe(chat); const form = hsbcSendForm(); if (form) ro.observe(form); }
   document.addEventListener('keydown', event => { if (event.key === 'Escape' && strip.classList.contains('is-open')) hsbcQrClose(); });
+  // 1.0.55 keyboard (no need to focus the handle first):
+  //   Alt+Q anywhere (also while typing) opens / closes the drawer; Space or Enter does the same when the focus is not in a text field,
+  //   a button or a popup; Esc closes (above). While open, 1-9 (and 0 = 10th, top row or numpad) press the drawer's buttons in reading
+  //   order (top to bottom, then left to right, as laid out right now) and close it. Only plain key presses; IME composition is ignored.
+  const qrOpen = () => strip.classList.contains('is-open');
+  const qrUsable = () => !document.documentElement.classList.contains('hsbc-qr-drawer-off') && strip.getClientRects().length > 0 && !document.querySelector('dialog[open]');
+  const qrItems = () => {
+    const bar = strip.querySelector('#qr--bar'); if (!bar) return [];
+    const vis = [...bar.querySelectorAll('.qr--button, button, .menu_button, [role="button"], a[href]')].filter(el => { const r = el.getBoundingClientRect(); return r.width > 4 && r.height > 4 && !el.closest('[hidden]') && getComputedStyle(el).visibility !== 'hidden'; });
+    return vis.filter(el => !vis.some(o => o !== el && o.contains(el))).map(el => ({ el, r: el.getBoundingClientRect() }))
+      .sort((a, b) => Math.abs(a.r.top - b.r.top) > 8 ? a.r.top - b.r.top : a.r.left - b.r.left).map(x => x.el);
+  };
+  const stop = event => { event.preventDefault(); event.stopPropagation(); event.stopImmediatePropagation(); };
+  const toggle = () => document.getElementById('hsbc-qr-handle')?.click();
+  window.addEventListener('keydown', event => {
+    if (event.defaultPrevented || event.isComposing || event.keyCode === 229 || event.ctrlKey || event.metaKey || event.repeat) return;
+    if (!qrUsable()) return;
+    if (event.altKey) { if (event.code === 'KeyQ' && !event.shiftKey) { stop(event); toggle(); } return; }
+    if (event.shiftKey) return;
+    const digit = /^(?:Digit|Numpad)([0-9])$/.exec(event.code);
+    if (digit && qrOpen()) {
+      const el = qrItems()[(Number(digit[1]) || 10) - 1]; if (!el) return;
+      stop(event); el.click(); window.setTimeout(hsbcQrClose, 0); return;
+    }
+    if (event.key === ' ' || event.key === 'Enter') {
+      const target = event.target instanceof Element ? event.target : null;
+      if (target && target.closest('textarea, input, select, [contenteditable=""], [contenteditable="true"], button, a[href], [role="button"], .menu_button, [tabindex]:not([tabindex="-1"]):not(body), dialog, .popup')) return;
+      stop(event); toggle();
+    }
+  }, true);
 }
 // Welcome card image (the red HSBC half of the welcome screen #hsbc-new-splash): stored in this extension's settings (welcomeImage, data URL)
 function hsbcApplyWelcomeImage() {
