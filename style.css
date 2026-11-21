@@ -3469,3 +3469,10 @@ html.hsbc-skin-on #hsbc-uk-app #hsbc-native-host>#rm_extensions_block #regex_con
 @media (min-width: 641px) and (hover: hover) and (pointer: fine) {
   html.hsbc-skin-on #hsbc-uk-app #hsbc-subpage::-webkit-scrollbar-thumb:hover{background:#767676!important}
 }
+/* 1.0.54 — 2026-11-21 */
+/* Boot: ST shows its loading screen as a popup (#loader inside dialog.popup); the skin popup style turned it into a white card for a moment.
+   Until the shell is mounted it now looks like the red half of the HSBC welcome screen. The same rules go into ST custom CSS (see index.js) so they apply ~1 s after a reload. */
+body:not(.hsbc-ui-mounted) dialog.popup:has(#loader){position:fixed!important;inset:0!important;width:100vw!important;height:100vh!important;height:100dvh!important;max-width:none!important;max-height:none!important;min-width:0!important;min-height:0!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;outline:0!important;box-shadow:none!important;transform:none!important;animation:none!important;opacity:1!important;filter:none!important;backdrop-filter:none!important;background:linear-gradient(#DB0011 0 calc(100% - 305px),#fff calc(100% - 305px))!important}
+body:not(.hsbc-ui-mounted) dialog.popup:has(#loader)::backdrop{background:#DB0011!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+body:not(.hsbc-ui-mounted) dialog.popup:has(#loader) *{visibility:hidden!important;animation:none!important}
+body:not(.hsbc-ui-mounted) dialog.popup:has(#loader)::before{content:""!important;position:absolute!important;left:50%!important;top:calc((100% - 305px) / 2)!important;width:clamp(150px,42vw,250px)!important;height:calc(clamp(150px,42vw,250px) / 2)!important;transform:translate(-50%,-50%)!important;visibility:visible!important;background:center/contain no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 100'%3E%3Cpath fill='%23fff' d='M48 0H152L200 50 152 100H48L0 50Z'/%3E%3Cpath fill='%23db0011' d='M48 0L100 50 48 100Z'/%3E%3Cpath fill='%23db0011' d='M152 0L100 50 152 100Z'/%3E%3C/svg%3E")!important}
