@@ -3470,3 +3470,12 @@ html.hsbc-skin-on #hsbc-uk-app #hsbc-native-host>#rm_extensions_block #regex_con
   html.hsbc-skin-on #hsbc-uk-app #hsbc-subpage::-webkit-scrollbar-thumb:hover{background:#767676!important}
 }
 /* 1.0.54 — 2026-11-21: boot loading-screen rules live in ST Custom CSS (index.js hsbcBootCss) */
+/* 1.0.56 — 2026-11-22 */
+/* ST renders only the latest messages and puts #show_more_messages at the top of #chat to load older ones; the rule that hides every
+   non-message child of #chat (welcome panels etc.) hid it too, so older messages could not be reached. Keep it visible, HSBC style. */
+html.hsbc-skin-on #hsbc-chat-viewport #chat>#show_more_messages{display:block!important;visibility:visible!important;opacity:1!important;box-sizing:border-box!important;width:fit-content!important;max-width:calc(100% - 24px)!important;height:auto!important;margin:12px auto!important;padding:10px 18px!important;color:#DB0011!important;background:#fff!important;border:1px solid #DB0011!important;border-radius:0!important;box-shadow:none!important;text-shadow:none!important;font-family:Arial,"Noto Sans",sans-serif!important;font-size:14px!important;font-weight:600!important;line-height:1.2!important;text-align:center!important;cursor:pointer!important;filter:none!important}
+@media (hover: hover) and (pointer: fine) { html.hsbc-skin-on #hsbc-chat-viewport #chat>#show_more_messages:hover{background:#DB0011!important;color:#fff!important} }
+/* (b) ST marks messages hidden from the AI (/hide, summary / memory extensions) with is_system="true" but an empty type; only real system
+   notices (help, welcome ...) carry a type. The skin hid every is_system message, so a chat whose older floors were hidden showed only the
+   latest ones. Hidden messages are shown again (ST shows them too, with a ghost icon); typed system notices stay hidden. */
+html.hsbc-skin-on #hsbc-chat-viewport #chat>.mes[is_system="true"]:is([type=""],:not([type])):not(.smallSysMes){display:flex!important;visibility:visible!important}
