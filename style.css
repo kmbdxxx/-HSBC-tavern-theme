@@ -3479,3 +3479,17 @@ html.hsbc-skin-on #hsbc-chat-viewport #chat>#show_more_messages{display:block!im
    notices (help, welcome ...) carry a type. The skin hid every is_system message, so a chat whose older floors were hidden showed only the
    latest ones. Hidden messages are shown again (ST shows them too, with a ghost icon); typed system notices stay hidden. */
 html.hsbc-skin-on #hsbc-chat-viewport #chat>.mes[is_system="true"]:is([type=""],:not([type])):not(.smallSysMes){display:flex!important;visibility:visible!important}
+
+/* 1.0.51 — 2026-11-22 root palette: the skin replaces the user UI theme at <html> (beats ST inline vars via !important; only while html.hsbc-skin-on) */
+html.hsbc-skin-on{--SmartThemeBodyColor:#1a1a1a!important;--SmartThemeEmColor:#767676!important;--SmartThemeUnderlineColor:#1a1a1a!important;--SmartThemeQuoteColor:#DB0011!important;--SmartThemeBlurTintColor:#fff!important;--SmartThemeChatTintColor:#fff!important;--SmartThemeUserMesBlurTintColor:#F3F4F6!important;--SmartThemeBotMesBlurTintColor:#fff!important;--SmartThemeBorderColor:#D7D8D6!important;--SmartThemeShadowColor:transparent!important;--SmartThemeFastUIBGColor:#fff!important;--SmartThemeBlurStrength:0px!important;color-scheme:light}
+
+/* 1.0.51 — 2026-11-22 Extensions (Manage extensions popup), PHONE: the amber dot + Update tag + author + version (all flex:none) squeezed the
+   name of flagged rows to 0px in the ~98px text block. Phone: those hidden, name full width in amber, one 11px line "Update available" below.
+   Desktop unchanged (the plugin-owned line is hidden there). */
+body.hsbc-ui-mounted dialog.popup:has(.extensions_info):not(#hsbc-x) .extension_block :is(.extension_enabled,.extension_disabled,.extension_missing):has(>.extension_name.update_available)>.hsbc-ext-update-line{display:none!important}
+@media (max-width: 640px) {
+body.hsbc-ui-mounted dialog.popup:has(.extensions_info):not(#hsbc-x) .extension_block :is(.extension_enabled,.extension_disabled,.extension_missing):has(>.extension_name.update_available){flex-wrap:wrap!important;row-gap:0!important}
+body.hsbc-ui-mounted dialog.popup:has(.extensions_info):not(#hsbc-x) .extension_block :is(.extension_enabled,.extension_disabled,.extension_missing):has(>.extension_name.update_available)>:is(.hsbc-ext-update-dot,.hsbc-ext-update-tag,.extension_author,.extension_version){display:none!important}
+body.hsbc-ui-mounted dialog.popup:has(.extensions_info):not(#hsbc-x) .extension_block :is(.extension_enabled,.extension_disabled,.extension_missing):has(>.extension_name.update_available)>.extension_name{flex:1 1 100%!important;color:#B26A00!important}
+body.hsbc-ui-mounted dialog.popup:has(.extensions_info):not(#hsbc-x) .extension_block :is(.extension_enabled,.extension_disabled,.extension_missing):has(>.extension_name.update_available)>.hsbc-ext-update-line{display:block!important;flex:1 1 100%!important;min-width:0!important;margin:0!important;padding:0!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;font-size:11px!important;line-height:13px!important;color:#B26A00!important}
+}
