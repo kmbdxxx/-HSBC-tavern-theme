@@ -5,8 +5,9 @@
   "optional": [],
   "js": "index.js",
   "css": "style.css",
+  "hooks": { "disable": "hsbcOnDisable", "delete": "hsbcOnDisable" },
   "author": "kmbdxxx",
-  "version": "1.1.25",
+  "version": "1.1.26",
   "description": "Unofficial HSBC-UK-mobile-app-inspired skin for SillyTavern (fan-made theme, not affiliated with HSBC).",
   "homePage": "https://github.com/kmbdxxx/-HSBC-tavern-theme"
 }

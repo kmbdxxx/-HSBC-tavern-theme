@@ -44,6 +44,7 @@ It wraps SillyTavern in a banking-app style shell while keeping every native Sil
 - Quick actions drawer by keyboard: Alt+Q opens/closes it from anywhere (also while typing), Space/Enter when nothing is focused, Esc closes; while open, 1-9 / 0 press its buttons left to right.
 - Older messages reachable again: the "Show more messages" button is shown (HSBC style) and messages hidden from the AI (ghost / /hide) are displayed like ST does.
 - Send arrow no longer turns into STOP while idle (e.g. before the API is connected); the skin palette replaces the user UI theme at the root (browser bar white); phone Extensions list: names readable, amber name + "Update available" line for pending updates.
+- API page: the custom-model pencil of other extensions (e.g. Vertex-Custom-Models) stays visible and is styled as a skin icon button; disabling or deleting the theme in the Extensions manager also removes its loading-screen block from Custom CSS.
 - Welcome card image: choose your own picture for the welcome screen (stored in the extension settings), reset to default any time.
 
 All options live in **Extensions → HSBC UK Theme Settings**.
